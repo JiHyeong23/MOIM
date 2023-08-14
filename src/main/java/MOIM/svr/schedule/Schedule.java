@@ -1,6 +1,6 @@
 package MOIM.svr.schedule;
 
-import MOIM.svr.post.Status;
+import MOIM.svr.post.enums.Status;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

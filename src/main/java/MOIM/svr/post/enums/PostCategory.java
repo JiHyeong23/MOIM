@@ -1,4 +1,4 @@
-package MOIM.svr.post;
+package MOIM.svr.post.enums;
 
 public enum PostCategory {
     FREE, REVIEW
