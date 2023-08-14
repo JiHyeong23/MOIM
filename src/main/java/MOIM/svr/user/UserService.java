@@ -1,8 +1,11 @@
 package MOIM.svr.user;
 
-import MOIM.svr.security.JwtHelper;
-import MOIM.svr.user.userDto.UserIntroDto;
+import MOIM.svr.post.Post;
+import MOIM.svr.post.PostRepository;
+import MOIM.svr.user.userDto.UserInfoDto;
+import MOIM.svr.user.userDto.UserPatchDto;
 import MOIM.svr.user.userDto.UserSignUpDto;
+import MOIM.svr.utilities.UtilMethods;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -20,7 +24,8 @@ public class UserService implements UserDetailsService {
     private UserMapper userMapper;
     private UserRepository userRepository;
     private BCryptPasswordEncoder encoder;
-    private JwtHelper jwtHelper;
+    private UtilMethods utilMethods;
+    private final PostRepository postRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -35,14 +40,30 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
-    public void modifiedUserIntro(UserIntroDto userIntroDto, HttpServletRequest request) {
-        String token = request.getHeader("Authorization").substring(7);
-        System.out.println("===");
-        System.out.println(token);
-        String email = jwtHelper.getEmailFromJwtToken(token);
-        User user = userRepository.findByEmail(email);
-        String intro = userIntroDto.getIntro();
-        user.updateIntro(intro);
+    public UserInfoDto getUserInfo(HttpServletRequest request) {
+        User user = utilMethods.parseTokenForUser(request);
+        UserInfoDto userInfoDto = userMapper.userToUserInfoDto(user);
+        List<Post> posts = postRepository.findTop3ByUserOrderByCreatedAtDesc(user);
+        userInfoDto.updatePost(posts);
+        return userInfoDto;
+    }
+
+    public void modifiedUserInfo(UserPatchDto userPatchDto, HttpServletRequest request) {
+        User user = utilMethods.parseTokenForUser(request);
+
+        String intro = userPatchDto.getIntro();
+        if (intro != null) {
+            user.updateIntro(intro);
+        }
+        String nickname = userPatchDto.getNickname();
+        if(nickname != null) {
+            user.updateNickname(nickname);
+        }
+        String userImage = userPatchDto.getUserImage();
+        if(userImage != null) {
+            user.updateUserImage(userImage);
+        }
+
         userRepository.save(user);
     }
 

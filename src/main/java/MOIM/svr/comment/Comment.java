@@ -1,11 +1,10 @@
 package MOIM.svr.comment;
 
-import MOIM.svr.post.Status;
+import MOIM.svr.post.Post;
+import MOIM.svr.post.enums.Status;
+import MOIM.svr.user.User;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -13,9 +12,11 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long commentId;
-    private Long postId;
     private Long userId;
     private String body;
     private LocalDateTime createdAt;
     private Status status;
+    @ManyToOne
+    @JoinColumn(name = "post_id")
+    private Post post;
 }
