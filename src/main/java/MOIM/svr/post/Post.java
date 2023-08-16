@@ -6,7 +6,7 @@ import MOIM.svr.post.enums.Status;
 import MOIM.svr.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import org.springframework.lang.Nullable;
+import lombok.Getter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -17,18 +17,18 @@ import static MOIM.svr.post.enums.Status.POSTED;
 
 @Entity
 @Builder
+@Getter
 @AllArgsConstructor
 public class Post {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long postId;
     private String title;
     @Column(columnDefinition = "TEXT")
     private String body;
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
-    @Nullable
-    private String groupId;
+    private Long groupId;
     @Enumerated(EnumType.STRING)
     @Builder.Default
     private Status status = POSTED;
