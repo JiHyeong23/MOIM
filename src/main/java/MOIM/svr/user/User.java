@@ -1,5 +1,6 @@
 package MOIM.svr.user;
 
+import MOIM.svr.comment.Comment;
 import MOIM.svr.post.Post;
 import lombok.*;
 
@@ -29,9 +30,11 @@ public class User {
     private String intro = "";
     @Builder.Default
     private String userImage = "";
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Post> posts = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Post> posts = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
 
     public User() {}
 
