@@ -1,8 +1,7 @@
 package MOIM.svr.comment;
 
-import MOIM.svr.comment.commentDto.CommentGetDto;
+import MOIM.svr.comment.commentDto.CommentMyResponseDto;
 import MOIM.svr.comment.commentDto.CommentPostDto;
-import MOIM.svr.comment.commentDto.CommentResponseDto;
 import MOIM.svr.post.Post;
 import MOIM.svr.user.User;
 import MOIM.svr.utilities.UtilMethods;
@@ -12,7 +11,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -32,7 +30,16 @@ public class CommentService {
         commentRepository.save(comment);
     }
 
-    public Page<CommentResponseDto> getComments(CommentGetDto commentGetDto, Pageable pageable) {
-        return commentRepository.findCommentResponseDtoByPost(utilMethods.findPost(commentGetDto.getPostId()), pageable);
+    public Page<CommentMyResponseDto> getComments(HttpServletRequest request, Pageable pageable) {
+        User user = utilMethods.parseTokenForUser(request);
+        Page<Comment> comments = commentRepository.findByUser(user, pageable);
+        return comments.map(comment -> {
+            CommentMyResponseDto myCommentDto = commentMapper.commentToCommentMyResponseDto(comment);
+            myCommentDto.setPostTitle(comment.getPost().getTitle());
+            myCommentDto.setPostUserNickname(comment.getPost().getUser().getUserNickname());
+            myCommentDto.setPostCreatedAt(comment.getPost().getCreatedAt());
+            myCommentDto.setPostCommentCount((utilMethods.getComments(comment.getPost())).size());
+            return myCommentDto;
+        });
     }
 }

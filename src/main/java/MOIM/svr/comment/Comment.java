@@ -5,12 +5,14 @@ import MOIM.svr.post.enums.Status;
 import MOIM.svr.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Builder
+@Getter
 @AllArgsConstructor
 public class Comment {
     @Id
