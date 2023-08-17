@@ -1,8 +1,10 @@
 package MOIM.svr.user;
 
 import MOIM.svr.comment.Comment;
+import MOIM.svr.group.Group;
 import MOIM.svr.post.Post;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -12,8 +14,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "user_table")
-@Builder
 @Getter
+@Builder
 @AllArgsConstructor
 public class User {
     @Id
@@ -22,24 +24,27 @@ public class User {
     private String userNickname;
     private String email;
     private String pw;
-    private String DOB;
-    @Builder.Default
+    @Column(columnDefinition = "DATE")
+    private LocalDateTime DOB;
     private LocalDateTime createdAt = LocalDateTime.now();
     @Column(columnDefinition = "TEXT")
-    @Builder.Default
     private String intro = "";
-    @Builder.Default
     private String userImage = "";
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Post> posts = new ArrayList<>();
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Comment> comments = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Group> groups = new ArrayList<>();
 
     public User() {}
 
     public void setPw(String pw) {
         this.pw = pw;
+    }
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public User updateIntro(String newIntro) {

@@ -1,14 +1,14 @@
 package MOIM.svr.user.userDto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Builder
+import java.time.LocalDateTime;
+
+@Setter
 @Getter
 public class UserSignUpDto {
     private String userNickname;
     private String email;
     private String pw;
-    private String DOB;
+    private LocalDateTime DOB;
 }

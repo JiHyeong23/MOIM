@@ -14,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +37,7 @@ public class UserService implements UserDetailsService {
 
     public void registerUser(UserSignUpDto userSignUpDto) {
         User user = userMapper.userSignUpToUser(userSignUpDto);
+        user.setCreatedAt(LocalDateTime.now());
         user.setPw(encoder.encode(user.getPw()));
         userRepository.save(user);
     }
