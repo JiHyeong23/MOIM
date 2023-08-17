@@ -1,7 +1,8 @@
 package MOIM.svr.post;
 
 import MOIM.svr.comment.Comment;
-import MOIM.svr.post.enums.PostCategory;
+import MOIM.svr.group.Group;
+import MOIM.svr.utilities.Category;
 import MOIM.svr.post.enums.Status;
 import MOIM.svr.user.User;
 import lombok.AllArgsConstructor;
@@ -33,11 +34,14 @@ public class Post {
     @Builder.Default
     private Status status = POSTED;
     @Enumerated(EnumType.STRING)
-    private PostCategory category;
+    private Category category;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+    @ManyToOne
+    @JoinColumn(name = "group_id")
+    private Group group;
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 

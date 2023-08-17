@@ -1,6 +1,6 @@
 package MOIM.svr.post;
 
-import MOIM.svr.post.enums.PostCategory;
+import MOIM.svr.utilities.Category;
 import MOIM.svr.post.postDto.PostCreationDto;
 import MOIM.svr.post.postDto.PostDetailDto;
 import MOIM.svr.post.postDto.PostListDto;
@@ -43,9 +43,9 @@ public class PostController {
     //카테고리별 조회
     @GetMapping("/ctg/{groupId}/{category}")
     public ResponseEntity getAllPosts(@PathVariable String category, @PathVariable Long groupId, Pageable pageable) {
-        PostCategory postCategory;
+        Category postCategory;
         try {
-            postCategory = PostCategory.valueOf(category.toUpperCase());
+            postCategory = Category.valueOf(category.toUpperCase());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Invalid category value");
         }

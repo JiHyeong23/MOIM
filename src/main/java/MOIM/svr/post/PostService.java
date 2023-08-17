@@ -1,7 +1,7 @@
 package MOIM.svr.post;
 
 import MOIM.svr.comment.commentDto.CommentResponseDto;
-import MOIM.svr.post.enums.PostCategory;
+import MOIM.svr.utilities.Category;
 import MOIM.svr.post.postDto.PostCreationDto;
 import MOIM.svr.post.postDto.PostDetailDto;
 import MOIM.svr.post.postDto.PostListDto;
@@ -50,7 +50,7 @@ public class PostService {
         });
     }
 
-    public Page<PostListDto> getCategoryPosts(PostCategory category, Long groupId, Pageable pageable) {
+    public Page<PostListDto> getCategoryPosts(Category category, Long groupId, Pageable pageable) {
         Page<Post> posts = postRepository.findByCategoryAndGroupIdOrderByCreatedAtDesc(category, groupId, pageable);
 
         return posts.map(post -> {
