@@ -1,6 +1,7 @@
 package MOIM.svr.post;
 
 import MOIM.svr.comment.commentDto.CommentResponseDto;
+import MOIM.svr.group.Group;
 import MOIM.svr.utilities.Category;
 import MOIM.svr.post.postDto.PostCreationDto;
 import MOIM.svr.post.postDto.PostDetailDto;
@@ -33,9 +34,11 @@ public class PostService {
     public PostDetailDto getPostDetail(Long postId) {
         Post post = postRepository.findById(postId).get();
         PostDetailDto postDetailDto = postMapper.postToPostDetailDto(post);
+
         List<CommentResponseDto> comments = utilMethods.getComments(post);
         postDetailDto.setComments(comments);
         postDetailDto.setCommentsCount((long) comments.size());
+
         return postDetailDto;
     }
 
@@ -51,7 +54,8 @@ public class PostService {
     }
 
     public Page<PostListDto> getCategoryPosts(Category category, Long groupId, Pageable pageable) {
-        Page<Post> posts = postRepository.findByCategoryAndGroupIdOrderByCreatedAtDesc(category, groupId, pageable);
+        Group group = utilMethods.findGroup(groupId);
+        Page<Post> posts = postRepository.findByCategoryAndGroupOrderByCreatedAtDesc(category, group, pageable);
 
         return posts.map(post -> {
             PostListDto postListDto = postMapper.postToPostListDto(post);

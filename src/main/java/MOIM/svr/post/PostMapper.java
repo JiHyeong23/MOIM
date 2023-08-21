@@ -13,14 +13,14 @@ public interface PostMapper {
     @BeanMapping(ignoreByDefault = true)
     @Mapping(source = "title", target = "title")
     @Mapping(source = "body", target = "body")
-    @Mapping(source = "groupId", target = "groupId")
+    @Mapping(source = "groupId", target = "group.groupId")
     @Mapping(source = "category", target = "category")
     Post postCreationDtoToPost(PostCreationDto postCreationDto);
 
     @Mapping(source = "title", target = "title")
     @Mapping(source = "body", target = "body")
     @Mapping(source = "createdAt", target = "createdAt")
-    @Mapping(source = "groupId", target = "groupId")
+    @Mapping(source = "group.groupId", target = "groupId")
     @Mapping(source = "status", target = "status")
     @Mapping(source = "category", target = "category")
     @Mapping(source = "user.userNickname", target = "userNickname")

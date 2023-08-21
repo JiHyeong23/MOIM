@@ -8,6 +8,7 @@ import MOIM.svr.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -19,17 +20,17 @@ import static MOIM.svr.post.enums.Status.POSTED;
 @Entity
 @Builder
 @Getter
+@Setter
 @AllArgsConstructor
 public class Post {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long postId;
     private String title;
     @Column(columnDefinition = "TEXT")
     private String body;
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
-    private Long groupId;
     @Enumerated(EnumType.STRING)
     @Builder.Default
     private Status status = POSTED;
