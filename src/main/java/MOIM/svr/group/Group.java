@@ -1,7 +1,9 @@
 package MOIM.svr.group;
 
+import MOIM.svr.UserGroup.UserGroup;
+import MOIM.svr.apply.Apply;
+import MOIM.svr.master.Master;
 import MOIM.svr.post.Post;
-import MOIM.svr.user.User;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,7 +20,8 @@ public class Group {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long groupId;
     private String groupName;
-    private Long masterId;
+    @OneToOne(mappedBy = "group")
+    private Master master;
     private int maxSize;
     @Column(columnDefinition = "TEXT")
     private String intro;
@@ -27,9 +30,10 @@ public class Group {
     @Enumerated(EnumType.STRING)
     private GroupCategory category;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<UserGroup> users = new ArrayList<>();
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Post> posts = new ArrayList<>();
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Apply> applies = new ArrayList<>();
 }
