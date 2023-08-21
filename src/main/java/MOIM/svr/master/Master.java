@@ -1,18 +1,23 @@
 package MOIM.svr.master;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import MOIM.svr.group.Group;
+import MOIM.svr.user.User;
+import lombok.Setter;
+
+import javax.persistence.*;
 
 @Entity
+@Setter
 public class Master {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long masterId;
-    //
-    private Long groupId;
-    private Long userId;
+    @OneToOne
+    @JoinColumn(name = "group_id")
+    private Group group;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
 }
