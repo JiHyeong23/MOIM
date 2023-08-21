@@ -10,5 +10,5 @@ public class UserSignUpDto {
     private String userNickname;
     private String email;
     private String pw;
-    private LocalDateTime DOB;
+    private LocalDateTime dob;
 }

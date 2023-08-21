@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 public class UserInfoDto {
     private String userNickname;
-    private LocalDateTime DOB;
+    private LocalDateTime dob;
     private String intro;
     private String userImage;
     private List<Post> posts;

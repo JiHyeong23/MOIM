@@ -1,7 +1,9 @@
 package MOIM.svr.user;
 
+import MOIM.svr.UserGroup.UserGroup;
 import MOIM.svr.comment.Comment;
 import MOIM.svr.group.Group;
+import MOIM.svr.master.Master;
 import MOIM.svr.post.Post;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -25,7 +27,7 @@ public class User {
     private String email;
     private String pw;
     @Column(columnDefinition = "DATE")
-    private LocalDateTime DOB;
+    private LocalDateTime dob;
     private LocalDateTime createdAt = LocalDateTime.now();
     @Column(columnDefinition = "TEXT")
     private String intro = "";
@@ -36,7 +38,9 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Comment> comments = new ArrayList<>();
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Group> groups = new ArrayList<>();
+    private List<UserGroup> groups = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Master> masters = new ArrayList<>();
 
     public User() {}
 

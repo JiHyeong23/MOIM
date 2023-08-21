@@ -5,7 +5,6 @@ import MOIM.svr.user.userDto.UserSignUpDto;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
@@ -14,7 +13,7 @@ public interface UserMapper {
     @Mapping(source = "userNickname", target = "userNickname")
     @Mapping(source = "email", target = "email")
     @Mapping(source = "pw", target = "pw")
-    @Mapping(source = "DOB", target = "DOB")
+    @Mapping(source = "dob", target = "dob")
     User userSignUpToUser(UserSignUpDto userSignUpDto);
 
     UserInfoDto userToUserInfoDto(User user);
