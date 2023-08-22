@@ -15,9 +15,4 @@ public class UserInfoDto {
     private String intro;
     private String userImage;
     private List<Post> posts;
-
-    public UserInfoDto updatePost(List<Post> posts) {
-        this.posts = posts;
-        return this;
-    }
 }

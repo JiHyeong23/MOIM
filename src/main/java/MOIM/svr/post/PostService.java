@@ -2,12 +2,12 @@ package MOIM.svr.post;
 
 import MOIM.svr.comment.commentDto.CommentResponseDto;
 import MOIM.svr.group.Group;
-import MOIM.svr.utilities.Category;
+import MOIM.svr.utils.Category;
 import MOIM.svr.post.postDto.PostCreationDto;
 import MOIM.svr.post.postDto.PostDetailDto;
 import MOIM.svr.post.postDto.PostListDto;
 import MOIM.svr.user.User;
-import MOIM.svr.utilities.UtilMethods;
+import MOIM.svr.utils.UtilMethods;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,12 +23,13 @@ public class PostService {
     private PostRepository postRepository;
     private UtilMethods utilMethods;
 
-    public void savePost(PostCreationDto postCreationDto, HttpServletRequest request) {
+    public Post savePost(PostCreationDto postCreationDto, HttpServletRequest request) {
         Post post = postMapper.postCreationDtoToPost(postCreationDto);
         User user = utilMethods.parseTokenForUser(request);
         post.setUser(user);
 
         postRepository.save(post);
+        return post;
     }
 
     public PostDetailDto getPostDetail(Long postId) {

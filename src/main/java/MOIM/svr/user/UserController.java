@@ -3,6 +3,8 @@ package MOIM.svr.user;
 import MOIM.svr.user.userDto.UserInfoDto;
 import MOIM.svr.user.userDto.UserPatchDto;
 import MOIM.svr.user.userDto.UserSignUpDto;
+import MOIM.svr.utils.ResponseDto;
+import MOIM.svr.utils.Result;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,21 +19,37 @@ public class UserController {
 
     private UserService userService;
 
+    //회원가입
     @PostMapping("/signup")
-    public ResponseEntity<String> createUser(@RequestBody UserSignUpDto userSignUpDto) {
-        userService.registerUser(userSignUpDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body("User created successfully");
+    public ResponseEntity createUser(@RequestBody UserSignUpDto userSignUpDto) {
+        User user = userService.registerUser(userSignUpDto);
+
+        ResponseDto response = ResponseDto.builder()
+                .result(Result.SUCCESS).httpStatus(HttpStatus.CREATED).memo("User created successfully")
+                .response(user.getEmail()).build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @GetMapping()
-    public ResponseEntity<UserInfoDto> getUser(HttpServletRequest request) {
-        UserInfoDto userInfo = userService.getUserInfo(request);
-        return ResponseEntity.status(HttpStatus.OK).body(userInfo);
-    }
-
+    //유저 정보 수정
     @PatchMapping("/update")
-    public ResponseEntity<String> patchUserInfo(@RequestBody UserPatchDto userPatchDto, HttpServletRequest request) {
-        userService.modifiedUserInfo(userPatchDto, request);
-        return ResponseEntity.status(HttpStatus.OK).body("User patched successfully");
+    public ResponseEntity patchUserInfo(@RequestBody UserPatchDto userPatchDto, HttpServletRequest request) {
+        User user = userService.modifiedUserInfo(userPatchDto, request);
+
+        ResponseDto response = ResponseDto.builder()
+                .result(Result.SUCCESS).httpStatus(HttpStatus.OK).memo("User patched successfully")
+                .response(user.getUserNickname()).build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    //유저 정보 조회
+    @GetMapping
+    public ResponseEntity getUser(HttpServletRequest request) {
+        UserInfoDto userInfo = userService.getUserInfo(request);
+
+        ResponseDto response = ResponseDto.builder()
+                .result(Result.SUCCESS).httpStatus(HttpStatus.OK).memo("User information got successfully")
+                .response(userInfo).build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
 }

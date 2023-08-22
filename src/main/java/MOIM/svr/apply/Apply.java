@@ -25,5 +25,7 @@ public class Apply {
     @Column(columnDefinition = "TEXT")
     private String reason;
     private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime handledAt;
     private Boolean handled = Boolean.FALSE;
+
 }

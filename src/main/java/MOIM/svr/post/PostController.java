@@ -1,9 +1,11 @@
 package MOIM.svr.post;
 
-import MOIM.svr.utilities.Category;
+import MOIM.svr.utils.Category;
 import MOIM.svr.post.postDto.PostCreationDto;
 import MOIM.svr.post.postDto.PostDetailDto;
 import MOIM.svr.post.postDto.PostListDto;
+import MOIM.svr.utils.ResponseDto;
+import MOIM.svr.utils.Result;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,23 +23,35 @@ public class PostController {
 
     //게시글 작성
     @PostMapping
-    public ResponseEntity<String> createPost(@RequestBody PostCreationDto postCreationDto, HttpServletRequest request) {
-        postService.savePost(postCreationDto, request);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Post created successfully");
+    public ResponseEntity createPost(@RequestBody PostCreationDto postCreationDto, HttpServletRequest request) {
+        Post post = postService.savePost(postCreationDto, request);
+
+        ResponseDto response = ResponseDto.builder()
+                .result(Result.SUCCESS).httpStatus(HttpStatus.CREATED).memo("Post created successfully")
+                .response(post.getCreatedAt()).build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     //게시글 상세 조회
     @GetMapping("/{postId}")
     public ResponseEntity getPost(@PathVariable Long postId) {
         PostDetailDto postDetail = postService.getPostDetail(postId);
-        return ResponseEntity.status(HttpStatus.OK).body(postDetail);
+
+        ResponseDto response = ResponseDto.builder()
+                .result(Result.SUCCESS).httpStatus(HttpStatus.OK).memo("Post got successfully")
+                .response(postDetail).build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    //특정 유저 게시글(내가쓴글) 조회
-    @GetMapping("/users")
+    //내가쓴글 조회
+    @GetMapping("/my")
     public ResponseEntity getPosts(HttpServletRequest request, Pageable pageable) {
         Page<PostListDto> posts = postService.getUserPosts(request, pageable);
-        return ResponseEntity.status(HttpStatus.OK).body(posts);
+
+        ResponseDto response = ResponseDto.builder()
+                .result(Result.SUCCESS).httpStatus(HttpStatus.OK).memo("My Posts got successfully")
+                .response(posts).build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     //카테고리별 조회
@@ -49,8 +63,11 @@ public class PostController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Invalid category value");
         }
-
         Page<PostListDto> posts = postService.getCategoryPosts(postCategory, groupId, pageable);
-        return ResponseEntity.status(HttpStatus.OK).body(posts);
+
+        ResponseDto response = ResponseDto.builder()
+                .result(Result.SUCCESS).httpStatus(HttpStatus.OK).memo("Category posts got successfully")
+                .response(posts).build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

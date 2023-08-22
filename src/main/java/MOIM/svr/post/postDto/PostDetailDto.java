@@ -1,7 +1,7 @@
 package MOIM.svr.post.postDto;
 
 import MOIM.svr.comment.commentDto.CommentResponseDto;
-import MOIM.svr.utilities.Category;
+import MOIM.svr.utils.Category;
 import MOIM.svr.post.enums.Status;
 import lombok.Data;
 

@@ -28,6 +28,7 @@ public class User {
     private String pw;
     @Column(columnDefinition = "DATE")
     private LocalDateTime dob;
+    @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
     @Column(columnDefinition = "TEXT")
     private String intro = "";

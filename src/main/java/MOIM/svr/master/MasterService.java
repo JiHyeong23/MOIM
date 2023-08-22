@@ -1,23 +1,16 @@
 package MOIM.svr.master;
 
-import MOIM.svr.UserGroup.UserGroup;
 import MOIM.svr.UserGroup.UserGroupService;
 import MOIM.svr.apply.Apply;
 import MOIM.svr.apply.ApplyMapper;
 import MOIM.svr.apply.ApplyRepository;
 import MOIM.svr.apply.applyDto.ApplyDetailDto;
 import MOIM.svr.group.Group;
-import MOIM.svr.group.GroupService;
-import MOIM.svr.user.User;
-import MOIM.svr.user.UserRepository;
-import MOIM.svr.utilities.UtilMethods;
+import MOIM.svr.utils.UtilMethods;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -46,11 +39,11 @@ public class MasterService {
         return applyMapper.applyToApplyDetailDto(apply);
     }
 
-    public void acceptMember(Long groupId, Long applyId) {
-        Group group = utilMethods.findGroup(groupId);
+    public Apply acceptMember(Long groupId, Long applyId) {
         Apply apply = applyRepository.findById(applyId).get();
         apply.setHandled(Boolean.TRUE);
         applyRepository.save(apply);
         userGroupService.createUserGroup(groupId, apply.getUser().getUserId());
+        return apply;
     }
 }

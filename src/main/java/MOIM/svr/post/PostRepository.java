@@ -1,7 +1,7 @@
 package MOIM.svr.post;
 
 import MOIM.svr.group.Group;
-import MOIM.svr.utilities.Category;
+import MOIM.svr.utils.Category;
 import MOIM.svr.user.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

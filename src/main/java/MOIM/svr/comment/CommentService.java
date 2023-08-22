@@ -4,7 +4,7 @@ import MOIM.svr.comment.commentDto.CommentMyResponseDto;
 import MOIM.svr.comment.commentDto.CommentPostDto;
 import MOIM.svr.post.Post;
 import MOIM.svr.user.User;
-import MOIM.svr.utilities.UtilMethods;
+import MOIM.svr.utils.UtilMethods;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +19,7 @@ public class CommentService {
     private CommentMapper commentMapper;
     private UtilMethods utilMethods;
 
-    public void saveComment(CommentPostDto commentPostDto, HttpServletRequest request) {
+    public Comment saveComment(CommentPostDto commentPostDto, HttpServletRequest request) {
         User user = utilMethods.parseTokenForUser(request);
         Post post = utilMethods.findPost(commentPostDto.getPostId());
         Comment comment = Comment.builder()
@@ -28,6 +28,7 @@ public class CommentService {
                 .post(post)
                 .build();
         commentRepository.save(comment);
+        return comment;
     }
 
     public Page<CommentMyResponseDto> getComments(HttpServletRequest request, Pageable pageable) {

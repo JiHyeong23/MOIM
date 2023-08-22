@@ -7,9 +7,11 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface ApplyMapper {
+
     @Mapping(source = "groupId", target = "group.groupId")
     @Mapping(source = "reason", target = "reason")
     Apply applyPostDtoToApply(ApplyPostDto applyPostDto);
+
     @Mapping(source = "applyId", target = "applyId")
     @Mapping(source = "user.userNickname", target = "userNickname")
     @Mapping(source = "reason", target = "reason")

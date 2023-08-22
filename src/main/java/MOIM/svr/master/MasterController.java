@@ -1,16 +1,16 @@
 package MOIM.svr.master;
 
+import MOIM.svr.apply.Apply;
 import MOIM.svr.apply.applyDto.ApplyDetailDto;
-import MOIM.svr.group.Group;
-import MOIM.svr.utilities.UtilMethods;
+import MOIM.svr.utils.ResponseDto;
+import MOIM.svr.utils.Result;
 import lombok.AllArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/master/{groupId}")
@@ -22,6 +22,10 @@ public class MasterController {
     @GetMapping("/apply")
     public ResponseEntity getApplies(@PathVariable Long groupId, Pageable pageable) {
         Page<ApplyDetailDto> page = masterService.getApplies(groupId, pageable);
+
+        ResponseDto response = ResponseDto.builder()
+                .result(Result.SUCCESS).httpStatus(HttpStatus.OK).memo("Applies got successfully")
+                .response(page).build();
         return ResponseEntity.status(HttpStatus.OK).body(page);
     }
 
@@ -29,14 +33,22 @@ public class MasterController {
     @GetMapping("/apply/{applyId}")
     public ResponseEntity getApply(@PathVariable Long groupId, @PathVariable Long applyId) {
         ApplyDetailDto applyDetail = masterService.getApplyDetail(applyId);
-        return ResponseEntity.status(HttpStatus.OK).body(applyDetail);
+
+        ResponseDto response = ResponseDto.builder()
+                .result(Result.SUCCESS).httpStatus(HttpStatus.OK).memo("Apply got successfully")
+                .response(applyDetail).build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     //가입신청 승인
     @PostMapping("/apply/{applyId}")
     public ResponseEntity getMember(@PathVariable Long groupId, @PathVariable Long applyId) {
-        masterService.acceptMember(groupId, applyId);
-        return ResponseEntity.status(HttpStatus.OK).body("Accept created successfully");
+        Apply apply = masterService.acceptMember(groupId, applyId);
+
+        ResponseDto response = ResponseDto.builder()
+                .result(Result.SUCCESS).httpStatus(HttpStatus.OK).memo("Accept created successfully")
+                .response(apply.getHandled().toString()).build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 }

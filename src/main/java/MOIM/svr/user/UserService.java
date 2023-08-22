@@ -5,7 +5,7 @@ import MOIM.svr.post.PostRepository;
 import MOIM.svr.user.userDto.UserInfoDto;
 import MOIM.svr.user.userDto.UserPatchDto;
 import MOIM.svr.user.userDto.UserSignUpDto;
-import MOIM.svr.utilities.UtilMethods;
+import MOIM.svr.utils.UtilMethods;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,7 +14,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,22 +34,23 @@ public class UserService implements UserDetailsService {
                 (user.getEmail(), user.getPw(), true, true, true, true, new ArrayList<>());
     }
 
-    public void registerUser(UserSignUpDto userSignUpDto) {
+    public User registerUser(UserSignUpDto userSignUpDto) {
         User user = userMapper.userSignUpToUser(userSignUpDto);
-        user.setCreatedAt(LocalDateTime.now());
+//        user.setCreatedAt(LocalDateTime.now());
         user.setPw(encoder.encode(user.getPw()));
         userRepository.save(user);
+        return user;
     }
 
     public UserInfoDto getUserInfo(HttpServletRequest request) {
         User user = utilMethods.parseTokenForUser(request);
         UserInfoDto userInfoDto = userMapper.userToUserInfoDto(user);
         List<Post> posts = postRepository.findTop3ByUserOrderByCreatedAtDesc(user);
-        userInfoDto.updatePost(posts);
+        userInfoDto.setPosts(posts);
         return userInfoDto;
     }
 
-    public void modifiedUserInfo(UserPatchDto userPatchDto, HttpServletRequest request) {
+    public User modifiedUserInfo(UserPatchDto userPatchDto, HttpServletRequest request) {
         User user = utilMethods.parseTokenForUser(request);
 
         String intro = userPatchDto.getIntro();
@@ -67,6 +67,7 @@ public class UserService implements UserDetailsService {
         }
 
         userRepository.save(user);
+        return user;
     }
 
     public User findByEmail(String username) {

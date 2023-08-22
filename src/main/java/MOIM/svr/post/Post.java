@@ -2,7 +2,7 @@ package MOIM.svr.post;
 
 import MOIM.svr.comment.Comment;
 import MOIM.svr.group.Group;
-import MOIM.svr.utilities.Category;
+import MOIM.svr.utils.Category;
 import MOIM.svr.post.enums.Status;
 import MOIM.svr.user.User;
 import lombok.AllArgsConstructor;
@@ -25,7 +25,7 @@ import static MOIM.svr.post.enums.Status.POSTED;
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long postId;
+    private Long postId;//db데이터타입변경
     private String title;
     @Column(columnDefinition = "TEXT")
     private String body;
