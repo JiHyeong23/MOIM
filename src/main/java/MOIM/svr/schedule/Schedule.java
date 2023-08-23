@@ -1,14 +1,19 @@
 package MOIM.svr.schedule;
 
 import MOIM.svr.post.enums.Status;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.time.LocalDateTime;
+import java.time.Month;
 
 @Entity
+@Getter
+@Setter
 public class Schedule {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -18,6 +23,6 @@ public class Schedule {
     private String body;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
-    private Status status;
-
+    private ScheduleStatus status;
+    private Boolean highlight;
 }
