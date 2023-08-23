@@ -1,5 +1,6 @@
 package MOIM.svr.post;
 
+import MOIM.svr.post.postDto.PostPatchDto;
 import MOIM.svr.utils.Category;
 import MOIM.svr.post.postDto.PostCreationDto;
 import MOIM.svr.post.postDto.PostDetailDto;
@@ -29,6 +30,28 @@ public class PostController {
         ResponseDto response = ResponseDto.builder()
                 .result(Result.SUCCESS).httpStatus(HttpStatus.CREATED).memo("Post created successfully")
                 .response(post.getCreatedAt()).build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    //게시글 수정
+    @PatchMapping
+    public ResponseEntity patchPost(@RequestBody PostPatchDto postPatchDto, HttpServletRequest request) {
+        Post post = postService.patchPost(postPatchDto, request);
+
+        ResponseDto response = ResponseDto.builder()
+                .result(Result.SUCCESS).httpStatus(HttpStatus.OK).memo("Post patched successfully")
+                .response(post.getTitle()).build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    //게시글 삭제
+    @DeleteMapping("/{postId}")
+    public ResponseEntity deletePost(@PathVariable Long postId, HttpServletRequest request) {
+        postService.deletePost(postId, request);
+
+        ResponseDto response = ResponseDto.builder()
+                .result(Result.SUCCESS).httpStatus(HttpStatus.NO_CONTENT).memo("Post deleted successfully")
+                .response(postId).build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

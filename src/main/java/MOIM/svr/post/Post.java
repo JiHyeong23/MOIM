@@ -36,6 +36,8 @@ public class Post {
     private Status status = POSTED;
     @Enumerated(EnumType.STRING)
     private Category category;
+    @Builder.Default
+    private Boolean notice = Boolean.FALSE;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

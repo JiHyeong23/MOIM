@@ -2,6 +2,7 @@ package MOIM.svr.post;
 
 import MOIM.svr.comment.commentDto.CommentResponseDto;
 import MOIM.svr.group.Group;
+import MOIM.svr.post.postDto.PostPatchDto;
 import MOIM.svr.utils.Category;
 import MOIM.svr.post.postDto.PostCreationDto;
 import MOIM.svr.post.postDto.PostDetailDto;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -30,6 +32,35 @@ public class PostService {
 
         postRepository.save(post);
         return post;
+    }
+
+    public Post patchPost(PostPatchDto postPatchDto, HttpServletRequest request) {
+        Post post = postRepository.findById(postPatchDto.getPostId()).get();
+        User user = utilMethods.parseTokenForUser(request);
+        if(user == post.getUser()) {
+            if (postPatchDto.getTitle() != null) {
+                post.setTitle(postPatchDto.getTitle());
+            }
+            if (postPatchDto.getBody() != null) {
+                post.setBody(postPatchDto.getBody());
+            }
+            if (postPatchDto.getCategory() != null) {
+                post.setCategory(postPatchDto.getCategory());
+            }
+            postRepository.save(post);
+            return post;
+        }
+        else {
+            return null;
+        }
+    }
+
+    public void deletePost(Long postId, HttpServletRequest request) {
+        Post post = postRepository.findById(postId).get();
+        User user = utilMethods.parseTokenForUser(request);
+        if(user == post.getUser()) {
+            postRepository.deleteById(postId);
+        }
     }
 
     public PostDetailDto getPostDetail(Long postId) {
