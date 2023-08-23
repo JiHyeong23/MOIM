@@ -7,5 +7,5 @@ import org.mapstruct.Mapping;
 public interface MasterMapper {
     @Mapping(source = "userId", target = "user.userId")
     @Mapping(source = "groupId", target = "group.groupId")
-    Master toMaster(MasterCreateDAO masterCreateDAO);
+    Master toMaster(MasterCreateDao masterCreateDao);
 }
