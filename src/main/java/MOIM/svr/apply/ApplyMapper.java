@@ -10,6 +10,11 @@ public interface ApplyMapper {
 
     @Mapping(source = "groupId", target = "group.groupId")
     @Mapping(source = "reason", target = "reason")
+    @Mapping(target = "applyId", ignore = true)
+    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "handledAt", ignore = true)
+    @Mapping(target = "handled", ignore = true)
     Apply applyPostDtoToApply(ApplyPostDto applyPostDto);
 
     @Mapping(source = "applyId", target = "applyId")

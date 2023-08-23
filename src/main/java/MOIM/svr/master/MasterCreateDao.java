@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class MasterCreateDAO {
+public class MasterCreateDao {
     private Long userId;
     private Long groupId;
 }

@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 @AllArgsConstructor
 public class ApplyService {
     private ApplyRepository applyRepository;
-    private GroupRepository groupRepository;
     private ApplyMapper applyMapper;
     private UtilMethods utilMethods;
 
