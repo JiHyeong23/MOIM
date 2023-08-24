@@ -2,6 +2,8 @@ package MOIM.svr.master;
 
 import MOIM.svr.apply.Apply;
 import MOIM.svr.apply.applyDto.ApplyDetailDto;
+import MOIM.svr.group.Group;
+import MOIM.svr.group.groupDto.GroupPatchDto;
 import MOIM.svr.schedule.Schedule;
 import MOIM.svr.schedule.ScheduleDto.SchedulePatchDto;
 import MOIM.svr.schedule.ScheduleDto.SchedulePostDto;
@@ -55,6 +57,17 @@ public class MasterController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    //가입신청 거절
+    @DeleteMapping("/apply/{applyId}")
+    public ResponseEntity rejectMember(@PathVariable Long groupId, @PathVariable Long applyId, HttpServletRequest request) {
+        Apply apply = masterService.rejectMember(groupId, applyId, request);
+
+        ResponseDto response = ResponseDto.builder()
+                .result(Result.SUCCESS).httpStatus(HttpStatus.NO_CONTENT).memo("Apply deleted successfully")
+                .response(apply.getHandled().toString()).build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
     //스케줄 생성
     @PostMapping("/schedule")
     public ResponseEntity postSchedule(@PathVariable Long groupId, @RequestBody SchedulePostDto schedulePostDto, HttpServletRequest request) {
@@ -96,6 +109,39 @@ public class MasterController {
         ResponseDto response = ResponseDto.builder()
                 .result(Result.SUCCESS).httpStatus(HttpStatus.OK).memo("Post set notice successfully")
                 .response(postId).build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    //그룹 정보 수정
+    @PatchMapping("/info")
+    public ResponseEntity patchGroup(@PathVariable Long groupId, @RequestBody GroupPatchDto groupPatchDto, HttpServletRequest request) {
+        Group group = masterService.modifyGroupInfo(groupId, groupPatchDto, request);
+
+        ResponseDto response = ResponseDto.builder()
+                .result(Result.SUCCESS).httpStatus(HttpStatus.OK).memo("Group info modified successfully")
+                .response(group.getGroupName()).build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    //그룹 인원 수정
+    @PatchMapping("/number/{modifyNumber}")
+    public ResponseEntity patchNumber(@PathVariable Long groupId, @PathVariable Long modifyNumber, HttpServletRequest request) {
+        Group group = masterService.modifyGroupNumber(groupId, modifyNumber, request);
+
+        ResponseDto response = ResponseDto.builder()
+                .result(Result.SUCCESS).httpStatus(HttpStatus.OK).memo("Group number modified successfully")
+                .response(group.getMaxSize()).build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    //그룹 삭제
+    @DeleteMapping
+    public ResponseEntity deleteGroup(@PathVariable Long groupId, HttpServletRequest request) {
+        masterService.deleteGroup(groupId, request);
+
+        ResponseDto response = ResponseDto.builder()
+                .result(Result.SUCCESS).httpStatus(HttpStatus.NO_CONTENT).memo("Group deleted successfully")
+                .response(groupId).build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

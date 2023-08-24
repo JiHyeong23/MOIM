@@ -2,6 +2,7 @@ package MOIM.svr.user;
 
 import MOIM.svr.post.Post;
 import MOIM.svr.post.PostRepository;
+import MOIM.svr.user.userDto.UserDeleteDto;
 import MOIM.svr.user.userDto.UserInfoDto;
 import MOIM.svr.user.userDto.UserPatchDto;
 import MOIM.svr.user.userDto.UserSignUpDto;
@@ -42,12 +43,12 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
-    public UserInfoDto getUserInfo(HttpServletRequest request) {
+    public void getUserInfo(HttpServletRequest request) {
         User user = utilMethods.parseTokenForUser(request);
-        UserInfoDto userInfoDto = userMapper.userToUserInfoDto(user);
-        List<Post> posts = postRepository.findTop3ByUserOrderByCreatedAtDesc(user);
-        userInfoDto.setPosts(posts);
-        return userInfoDto;
+//        UserInfoDto userInfoDto = userMapper.userToUserInfoDto(user);
+//        List<Post> posts = postRepository.findTop3ByUserOrderByCreatedAtDesc(user);
+//        userInfoDto.setPosts(posts);
+//        return userInfoDto;
     }
 
     public User modifiedUserInfo(UserPatchDto userPatchDto, HttpServletRequest request) {
@@ -68,6 +69,11 @@ public class UserService implements UserDetailsService {
 
         userRepository.save(user);
         return user;
+    }
+
+    public void removeUser(UserDeleteDto userDeleteDto, HttpServletRequest request) {
+        User user = utilMethods.parseTokenForUser(request);
+        userRepository.delete(user);
     }
 
     public User findByEmail(String username) {

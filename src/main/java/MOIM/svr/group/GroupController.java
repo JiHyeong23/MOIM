@@ -1,5 +1,6 @@
 package MOIM.svr.group;
 
+import MOIM.svr.group.groupDto.GroupPatchDto;
 import MOIM.svr.group.groupDto.GroupPostDto;
 import MOIM.svr.utils.ResponseDto;
 import MOIM.svr.utils.Result;

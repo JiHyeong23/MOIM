@@ -1,5 +1,6 @@
 package MOIM.svr.user;
 
+import MOIM.svr.user.userDto.UserDeleteDto;
 import MOIM.svr.user.userDto.UserInfoDto;
 import MOIM.svr.user.userDto.UserPatchDto;
 import MOIM.svr.user.userDto.UserSignUpDto;
@@ -44,12 +45,23 @@ public class UserController {
     //유저 정보 조회
     @GetMapping
     public ResponseEntity getUser(HttpServletRequest request) {
-        UserInfoDto userInfo = userService.getUserInfo(request);
+        //UserInfoDto userInfo =
+        userService.getUserInfo(request);
 
         ResponseDto response = ResponseDto.builder()
                 .result(Result.SUCCESS).httpStatus(HttpStatus.OK).memo("User information got successfully")
-                .response(userInfo).build();
+                .response("null").build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    //회원탈퇴
+    @DeleteMapping
+    public ResponseEntity deleteUser(@RequestBody UserDeleteDto userDeleteDto, HttpServletRequest request) {
+        userService.removeUser(userDeleteDto, request);
+
+        ResponseDto response = ResponseDto.builder()
+                .result(Result.SUCCESS).httpStatus(HttpStatus.NO_CONTENT).memo("User deleted successfully")
+                .response("No content").build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 }

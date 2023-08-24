@@ -7,6 +7,7 @@ import MOIM.svr.apply.ApplyRepository;
 import MOIM.svr.apply.applyDto.ApplyDetailDto;
 import MOIM.svr.group.Group;
 import MOIM.svr.group.GroupRepository;
+import MOIM.svr.group.groupDto.GroupPatchDto;
 import MOIM.svr.post.Post;
 import MOIM.svr.post.PostRepository;
 import MOIM.svr.schedule.*;
@@ -52,7 +53,9 @@ public class MasterService {
     }
 
     public Page<ApplyDetailDto> getApplies(Long groupId, Pageable pageable, HttpServletRequest request) {
+        System.out.println(certifyMaster(groupId, request) != null);
         if (certifyMaster(groupId, request) != null) {
+            System.out.println("==================================");
             Group group = utilMethods.findGroup(groupId);
             Page<Apply> applies = applyRepository.findByGroup(group, pageable);
             return applies.map(applyMapper::applyToApplyDetailDto);
@@ -74,33 +77,39 @@ public class MasterService {
     }
 
     public Apply acceptMember(Long groupId, Long applyId, HttpServletRequest request) {
+        Apply apply = applyRepository.findById(applyId).get();
         if(certifyMaster(groupId, request) != null) {
-            Apply apply = applyRepository.findById(applyId).get();
+            Group group = groupRepository.findById(groupId).get();
+            if(group.getMaxSize() > group.getUsers().size()) {
+                apply.setHandled(Boolean.TRUE);
+                applyRepository.save(apply);
+                userGroupService.createUserGroup(groupId, apply.getUser().getUserId());
+            }
+        }
+        return apply; //인원 full 시 자동거절 추가구현 필요
+    }
+
+    public Apply rejectMember(Long groupId, Long applyId, HttpServletRequest request) {
+        Apply apply = applyRepository.findById(applyId).get();
+        if(certifyMaster(groupId, request) != null) {
             apply.setHandled(Boolean.TRUE);
             applyRepository.save(apply);
-            userGroupService.createUserGroup(groupId, apply.getUser().getUserId());
-            return apply;
         }
-        else {
-            return null; //임시
-        }
+        return apply;
     }
 
     public Schedule createSchedule(Long groupId, SchedulePostDto schedulePostDto, HttpServletRequest request) {
+        Schedule schedule = scheduleMapper.schedulePostDtoToSchedule(schedulePostDto);
         if(certifyMaster(groupId, request) != null) {
-            Schedule schedule = scheduleMapper.schedulePostDtoToSchedule(schedulePostDto);
             schedule.setGroupId(groupId);
             scheduleRepository.save(schedule);
-            return schedule;
         }
-        else {
-            return null;
-        }
+        return schedule;
     }
 
     public Schedule modifySchedule(Long groupId, SchedulePatchDto schedulePatchDto, HttpServletRequest request) {
+        Schedule schedule = scheduleRepository.findById(schedulePatchDto.getScheduleId()).get();
         if(certifyMaster(groupId, request) != null) {
-            Schedule schedule = scheduleRepository.findById(schedulePatchDto.getScheduleId()).get();
             if(schedulePatchDto.getScheduleName() != null) {
                 schedule.setScheduleName(schedulePatchDto.getScheduleName());
             }
@@ -114,10 +123,8 @@ public class MasterService {
                 schedule.setHighlight(schedulePatchDto.getHightlight());
             }
             scheduleRepository.save(schedule);
-            return schedule;
-        } else {
-            return null;
         }
+        return schedule;
     }
 
     public void deleteSchedule(Long groupId, Long scheduleId, HttpServletRequest request) {
@@ -131,6 +138,47 @@ public class MasterService {
             Post post = postRepository.findById(postId).get();
             post.setNotice(Boolean.TRUE);
             postRepository.save(post);
+        }
+    }
+
+    public Group modifyGroupInfo(Long groupId, GroupPatchDto groupPatchDto, HttpServletRequest request) {
+        Group group = groupRepository.findById(groupId).get();
+        if(certifyMaster(groupId, request) != null) {
+            if(groupPatchDto.getIntro() != null) {
+                group.setIntro(groupPatchDto.getIntro());
+            }
+            if(groupPatchDto.getGroupImage() != null) {
+                group.setGroupImage(groupPatchDto.getGroupImage());
+            }
+            groupRepository.save(group);
+        }
+        return group;
+    }
+
+    public Group modifyGroupNumber(Long groupId, Long modifyNumber, HttpServletRequest request) {
+        Group group = groupRepository.findById(groupId).get();
+        if(certifyMaster(groupId, request) != null) {
+            if (group.getMaxSize() > modifyNumber) {
+                if (group.getUsers().size() < modifyNumber) {
+                    group.setMaxSize(Math.toIntExact(modifyNumber));
+                }
+                else {
+                    return null; //에러처리
+                }
+            }
+            else if (group.getMaxSize() < modifyNumber) {
+                group.setMaxSize(Math.toIntExact(modifyNumber));
+            }
+        }
+        return group;
+    }
+
+    public void deleteGroup(Long groupId, HttpServletRequest request) {
+        User user = utilMethods.parseTokenForUser(request);
+        Group group = groupRepository.findById(groupId).get();
+        if(group.getUsers().size() == 0) {
+            masterRepository.delete(masterRepository.findByUserAndGroup(user, group));
+            groupRepository.delete(group);
         }
     }
 }
