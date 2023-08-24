@@ -1,6 +1,7 @@
 package MOIM.svr.comment;
 
 import MOIM.svr.comment.commentDto.CommentMyResponseDto;
+import MOIM.svr.comment.commentDto.CommentPatchDto;
 import MOIM.svr.comment.commentDto.CommentPostDto;
 import MOIM.svr.utils.ResponseDto;
 import MOIM.svr.utils.Result;
@@ -39,6 +40,28 @@ public class CommentController {
         ResponseDto response = ResponseDto.builder()
                 .result(Result.SUCCESS).httpStatus(HttpStatus.OK).memo("Comments got successfully")
                 .response(comments).build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    //댓글 수정
+    @PatchMapping
+    public ResponseEntity patchComment(@RequestBody CommentPatchDto commentPatchDto, HttpServletRequest request) {
+        Comment comment = commentService.modifyComment(commentPatchDto, request);
+
+        ResponseDto response = ResponseDto.builder()
+                .result(Result.SUCCESS).httpStatus(HttpStatus.OK).memo("Comment modified successfully")
+                .response(comment.getCommentId()).build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    //댓글 삭제
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity deleteComment(@PathVariable Long commentId, HttpServletRequest request) {
+        commentService.removeComment(commentId, request);
+
+        ResponseDto response = ResponseDto.builder()
+                .result(Result.SUCCESS).httpStatus(HttpStatus.NO_CONTENT).memo("Comment deleted successfully")
+                .response(commentId).build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
