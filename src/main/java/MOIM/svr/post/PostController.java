@@ -68,7 +68,7 @@ public class PostController {
 
     //내가쓴글 조회
     @GetMapping("/my")
-    public ResponseEntity getPosts(HttpServletRequest request, Pageable pageable) {
+    public ResponseEntity getPostList(HttpServletRequest request, Pageable pageable) {
         Page<PostListDto> posts = postService.getUserPosts(request, pageable);
 
         ResponseDto response = ResponseDto.builder()

@@ -2,12 +2,15 @@ package MOIM.svr.user;
 
 import MOIM.svr.post.Post;
 import MOIM.svr.post.PostRepository;
+import MOIM.svr.post.postDto.MyPostListDto;
 import MOIM.svr.user.userDto.UserDeleteDto;
 import MOIM.svr.user.userDto.UserInfoDto;
 import MOIM.svr.user.userDto.UserPatchDto;
 import MOIM.svr.user.userDto.UserSignUpDto;
 import MOIM.svr.utils.UtilMethods;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -43,12 +46,13 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
-    public void getUserInfo(HttpServletRequest request) {
+    public UserInfoDto getUserInfo(HttpServletRequest request) {
         User user = utilMethods.parseTokenForUser(request);
-//        UserInfoDto userInfoDto = userMapper.userToUserInfoDto(user);
-//        List<Post> posts = postRepository.findTop3ByUserOrderByCreatedAtDesc(user);
-//        userInfoDto.setPosts(posts);
-//        return userInfoDto;
+        UserInfoDto userInfoDto = userMapper.userToUserInfoDto(user);
+        Long userId = user.getUserId();
+        List<MyPostListDto> posts = postRepository.findMyPostListDto(userId);
+        userInfoDto.setPosts(posts);
+        return userInfoDto;
     }
 
     public User modifiedUserInfo(UserPatchDto userPatchDto, HttpServletRequest request) {

@@ -5,6 +5,7 @@ import MOIM.svr.group.Group;
 import MOIM.svr.utils.Category;
 import MOIM.svr.post.enums.Status;
 import MOIM.svr.user.User;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -39,10 +40,10 @@ public class Post {
     @Builder.Default
     private Boolean notice = Boolean.FALSE;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id")
     private Group group;
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)

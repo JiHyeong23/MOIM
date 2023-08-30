@@ -1,6 +1,7 @@
 package MOIM.svr.user.userDto;
 
 import MOIM.svr.post.Post;
+import MOIM.svr.post.postDto.MyPostListDto;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,5 +15,5 @@ public class UserInfoDto {
     private LocalDateTime dob;
     private String intro;
     private String userImage;
-    private List<Post> posts;
+    private List<MyPostListDto> posts;
 }

@@ -45,12 +45,11 @@ public class UserController {
     //유저 정보 조회
     @GetMapping
     public ResponseEntity getUser(HttpServletRequest request) {
-        //UserInfoDto userInfo =
-        userService.getUserInfo(request);
+        UserInfoDto userInfo = userService.getUserInfo(request);
 
         ResponseDto response = ResponseDto.builder()
                 .result(Result.SUCCESS).httpStatus(HttpStatus.OK).memo("User information got successfully")
-                .response("null").build();
+                .response(userInfo).build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
