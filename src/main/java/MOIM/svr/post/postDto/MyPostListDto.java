@@ -18,5 +18,5 @@ public class MyPostListDto {
     private Long postId;
     private String title;
     private LocalDateTime createdAt;
-    private Collection<Comment> comments;
+    private long commentCount;
 }

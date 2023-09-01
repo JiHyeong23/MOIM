@@ -16,7 +16,8 @@ import java.util.List;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
-    @Query("SELECT NEW MOIM.svr.post.postDto.MyPostListDto (p.user.userId, p.postId, p.title, p.createdAt, p.comments) " +
+    @Query("SELECT NEW MOIM.svr.post.postDto.MyPostListDto (p.user.userId, p.postId, p.title, p.createdAt, " +
+            "(SELECT COUNT(c) FROM Comment c WHERE c.post.postId = p.postId)) " +
             "FROM Post p WHERE p.user.userId = :userId ORDER BY p.createdAt DESC")
     List<MyPostListDto> findMyPostListDto(Long userId);
     Page<Post> findByUserOrderByCreatedAtDesc(User user, Pageable pageable);

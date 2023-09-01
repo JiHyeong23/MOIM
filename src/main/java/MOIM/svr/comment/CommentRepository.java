@@ -17,6 +17,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     Page<Comment> findByUser(User user, Pageable pageable);
 
-    @Query("SELECT NEW MOIM.svr.comment.commentDto.CommentResponseDto(c.body, c.createdAt, c.user.userId, u.userNickname) FROM Comment c JOIN User u ON c.user.userId = u.userId WHERE c.post = :post")
+    @Query("SELECT NEW MOIM.svr.comment.commentDto.CommentResponseDto(c.body, c.createdAt, c.user.userId, u.userNickname) " +
+            "FROM Comment c JOIN User u ON c.user.userId = u.userId WHERE c.post = :post")
     List<CommentResponseDto> findCommentResponseDtoByPost(@Param("post") Post post);
 }
