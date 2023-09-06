@@ -40,7 +40,6 @@ public class UserService implements UserDetailsService {
 
     public User registerUser(UserSignUpDto userSignUpDto) {
         User user = userMapper.userSignUpToUser(userSignUpDto);
-//        user.setCreatedAt(LocalDateTime.now());
         user.setPw(encoder.encode(user.getPw()));
         userRepository.save(user);
         return user;
