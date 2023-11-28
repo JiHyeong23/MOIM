@@ -19,4 +19,5 @@ public class PostDetailDto {
     private String userNickname;
     private List<CommentResponseDto> comments;
     private Long commentsCount;
+    private Boolean notice;
 }

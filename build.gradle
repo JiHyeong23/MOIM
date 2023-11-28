@@ -33,13 +33,14 @@ dependencies {
 
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
-	runtimeOnly 'org.postgresql:postgresql'
+
+	runtimeOnly 'com.mysql:mysql-connector-j'
 
 	implementation 'org.projectlombok:lombok:1.18.22'
 	annotationProcessor 'org.projectlombok:lombok:1.18.22'
 	annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
-	implementation 'org.mapstruct:mapstruct:1.4.2.Final'
-	annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
+	implementation 'org.mapstruct:mapstruct:1.5.2.Final'
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.2.Final'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
@@ -48,4 +49,19 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+
+def generated='src/main/generated'
+
+sourceSets {
+	main.java.srcDirs += [ generated ]
+}
+
+tasks.withType(JavaCompile) { // compile시
+	options.annotationProcessorGeneratedSourcesDirectory(file(generated))
+}
+
+clean.doLast { // clean시 폴더 삭제
+	file(generated).deleteDir()
 }

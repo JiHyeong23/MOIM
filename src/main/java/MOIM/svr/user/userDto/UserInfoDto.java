@@ -12,6 +12,7 @@ import java.util.List;
 @Setter
 public class UserInfoDto {
     private String userNickname;
+    private String email;
     private LocalDateTime dob;
     private String intro;
     private String userImage;

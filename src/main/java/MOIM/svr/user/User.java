@@ -32,15 +32,20 @@ public class User {
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
     @Column(columnDefinition = "TEXT")
+    @Builder.Default
     private String intro = "";
+    @Builder.Default
     private String userImage = "";
-
+    @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Post> posts = new ArrayList<>();
+    @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Comment> comments = new ArrayList<>();
+    @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<UserGroup> groups = new ArrayList<>();
+    @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Master> masters = new ArrayList<>();
 

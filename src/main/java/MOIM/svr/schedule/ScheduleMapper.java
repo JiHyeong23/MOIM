@@ -4,8 +4,9 @@ import MOIM.svr.schedule.ScheduleDto.ScheduleDetailDto;
 import MOIM.svr.schedule.ScheduleDto.SchedulePostDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface ScheduleMapper {
 
     @Mapping(source = "scheduleName", target = "scheduleName")

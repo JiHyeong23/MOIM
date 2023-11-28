@@ -4,8 +4,9 @@ import MOIM.svr.apply.applyDto.ApplyDetailDto;
 import MOIM.svr.apply.applyDto.ApplyPostDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface ApplyMapper {
 
     @Mapping(source = "groupId", target = "group.groupId")

@@ -6,8 +6,9 @@ import MOIM.svr.post.postDto.PostListDto;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface PostMapper {
 
     @BeanMapping(ignoreByDefault = true)
@@ -26,6 +27,7 @@ public interface PostMapper {
     @Mapping(source = "user.userNickname", target = "userNickname")
     @Mapping(target = "comments", ignore = true)
     @Mapping(target = "commentsCount", ignore = true)
+    @Mapping(source = "notice", target = "notice")
     PostDetailDto postToPostDetailDto(Post post);
 
     @Mapping(source = "postId", target = "postId")

@@ -1,7 +1,9 @@
-package MOIM.svr.utilities;
+package MOIM.svr.utils;
 
 import MOIM.svr.comment.CommentRepository;
 import MOIM.svr.comment.commentDto.CommentResponseDto;
+import MOIM.svr.group.Group;
+import MOIM.svr.group.GroupRepository;
 import MOIM.svr.post.Post;
 import MOIM.svr.post.PostRepository;
 import MOIM.svr.security.JwtHelper;
@@ -20,6 +22,7 @@ public class UtilMethods {
     private JwtHelper jwtHelper;
     private PostRepository postRepository;
     private CommentRepository commentRepository;
+    private final GroupRepository groupRepository;
 
     public User parseTokenForUser(HttpServletRequest request) {
         String token = request.getHeader("Authorization").substring(7);
@@ -33,5 +36,9 @@ public class UtilMethods {
 
     public List<CommentResponseDto> getComments(Post post) {
         return commentRepository.findCommentResponseDtoByPost(post);
+    }
+
+    public Group findGroup(Long groupId) {
+        return groupRepository.findById(groupId).get();
     }
 }
