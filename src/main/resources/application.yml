@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DBEP}
+    username: ${USERNAME}
+    password: ${PASSWORD}
+
+  jpa:
+#    show-sql:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+    database: mysql
+
+logging.level:
+  org.hibernate.SQL: trace
+  org.springframework.security: error
+
+token:
+  secret: ${TOKEN_SECRET}
+  expirationTime: ${TIME}
+
+jwt:
+  key:
+    secret: ${JWT_SECRET}
