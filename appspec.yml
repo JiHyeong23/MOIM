@@ -3,7 +3,9 @@ os: linux
 
 files:
   - source: /
-    destination: /home/ubuntu/moim
+    destination: /home/ubuntu/moduform
+    overwrite: yes
+file_exists_behavior: OVERWRITE
 permissions:
   - object: /home/ubuntu/moim/
     owner: ubuntu
