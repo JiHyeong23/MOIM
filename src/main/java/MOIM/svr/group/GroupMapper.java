@@ -1,5 +1,6 @@
 package MOIM.svr.group;
 
+import MOIM.svr.group.groupDto.GroupListDto;
 import MOIM.svr.group.groupDto.GroupPostDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -11,6 +12,13 @@ public interface GroupMapper {
     @Mapping(source = "maxSize", target = "maxSize")
     @Mapping(source = "intro", target = "intro")
     @Mapping(source = "groupImage", target = "groupImage")
-    @Mapping(source = "category", target = "category")
+    @Mapping(source = "groupCategory", target = "groupCategory")
     Group groupPostDtoToGroup(GroupPostDto groupPostDto);
+
+    @Mapping(source = "groupName",target = "groupName")
+    @Mapping(source = "maxSize", target = "maxSize")
+    @Mapping(source = "currentSize", target = "currentSize")
+    @Mapping(source = "groupImage", target = "groupImage")
+    @Mapping(source = "groupCategory", target = "groupCategory")
+    GroupListDto groupToGroupListDto(Group group);
 }

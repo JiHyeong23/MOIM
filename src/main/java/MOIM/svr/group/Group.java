@@ -9,6 +9,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,12 +25,14 @@ public class Group {
     @OneToOne(mappedBy = "group")
     private Master master;
     private int maxSize;
+    private int currentSize;
+    private LocalDateTime createdAt;
     @Column(columnDefinition = "TEXT")
     private String intro;
     private String groupImage;
     private int score;
     @Enumerated(EnumType.STRING)
-    private GroupCategory category;
+    private GroupCategory groupCategory;
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<UserGroup> users = new ArrayList<>();

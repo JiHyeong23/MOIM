@@ -84,6 +84,8 @@ public class MasterService {
                 apply.setHandled(Boolean.TRUE);
                 applyRepository.save(apply);
                 userGroupService.createUserGroup(groupId, apply.getUser().getUserId());
+                group.setCurrentSize(group.getCurrentSize()+1);
+                groupRepository.save(group);
             }
         }
         return apply; //인원 full 시 자동거절 추가구현 필요
