@@ -25,3 +25,7 @@ token:
 jwt:
   key:
     secret: ${JWT_SECRET}
+
+server:
+  error:
+    include-message: always

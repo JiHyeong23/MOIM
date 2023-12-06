@@ -24,7 +24,7 @@ public class SecurityController {
             String newAccessToken = jwtHelper.createAccessToken(username);
             responseToken.setAccess(newAccessToken);
         }
-        return ResponseEntity.ok(responseToken); // 바디에 전송중임 ~~!~
+        return ResponseEntity.ok(responseToken); //
     }
 
     private String getToken(HttpServletRequest request) {
