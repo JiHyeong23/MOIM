@@ -72,7 +72,7 @@ public class PostService {
         User user = utilMethods.parseTokenForUser(request);
         Post post = postRepository.findById(postId).get();
         PostDetailDto postDetailDto = postMapper.postToPostDetailDto(post);
-        postDetailDto.setUserId(user.getUserId());
+        postDetailDto.setUserId(post.getUser().getUserId());
         List<CommentResponseDto> comments = utilMethods.getComments(post);
         postDetailDto.setComments(comments);
         postDetailDto.setCommentsCount((long) comments.size());
