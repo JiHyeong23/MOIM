@@ -29,7 +29,7 @@ public class PostController {
 
         ResponseDto response = ResponseDto.builder()
                 .result(Result.SUCCESS).httpStatus(HttpStatus.CREATED).memo("Post created successfully")
-                .response(post.getCreatedAt()).build();
+                .response(post.getPostId()).build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

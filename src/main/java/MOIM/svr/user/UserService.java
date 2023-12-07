@@ -19,11 +19,13 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -45,9 +47,13 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(username);
-        return new org.springframework.security.core.userdetails.User
-                (user.getEmail(), user.getPw(), true, true, true, true, new ArrayList<>());
+        try {
+            User user = userRepository.findByEmail(username);
+            return new org.springframework.security.core.userdetails.User
+                    (user.getEmail(), user.getPw(), true, true, true, true, new ArrayList<>());
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 회원입니다");
+        }
     }
 
     public User registerUser(UserSignUpDto userSignUpDto) {
