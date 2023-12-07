@@ -40,7 +40,7 @@ public class GroupService {
     }
 
     public Page<GroupListDto> getGroups(Pageable pageable) {
-        Page<Group> groups = groupRepository.findAllByOrderByCreatedAtDesc(pageable);
+        Page<Group> groups = groupRepository.findAllByGroupIdNotOrderByCreatedAtDesc(1L, pageable);
 
         return groups.map(group -> {
             return groupMapper.groupToGroupListDto(group);

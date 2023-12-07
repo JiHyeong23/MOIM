@@ -10,5 +10,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface GroupRepository extends JpaRepository<Group, Long> {
 
-    Page<Group> findAllByOrderByCreatedAtDesc(Pageable pageable);
+    Page<Group> findAllByGroupIdNotOrderByCreatedAtDesc(Long groupId, Pageable pageable);
 }
