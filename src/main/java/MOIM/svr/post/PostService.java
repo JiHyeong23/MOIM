@@ -2,6 +2,7 @@ package MOIM.svr.post;
 
 import MOIM.svr.comment.commentDto.CommentResponseDto;
 import MOIM.svr.group.Group;
+import MOIM.svr.group.GroupRepository;
 import MOIM.svr.post.postDto.PostPatchDto;
 import MOIM.svr.utils.Category;
 import MOIM.svr.post.postDto.PostCreationDto;
@@ -24,13 +25,17 @@ public class PostService {
     private PostMapper postMapper;
     private PostRepository postRepository;
     private UtilMethods utilMethods;
+    private final GroupRepository groupRepository;
 
     public Post savePost(PostCreationDto postCreationDto, HttpServletRequest request) {
         Post post = postMapper.postCreationDtoToPost(postCreationDto);
         User user = utilMethods.parseTokenForUser(request);
         post.setUser(user);
-
         postRepository.save(post);
+
+        Group group = groupRepository.findById(postCreationDto.getGroupId()).get();
+        group.setScore(group.getScore()+1);
+        groupRepository.save(group);
         return post;
     }
 

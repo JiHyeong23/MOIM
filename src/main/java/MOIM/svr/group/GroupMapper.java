@@ -13,7 +13,6 @@ public interface GroupMapper {
     @Mapping(source = "maxSize", target = "maxSize")
     @Mapping(source = "intro", target = "intro")
     @Mapping(source = "groupImage", target = "groupImage")
-    @Mapping(source = "groupCategory", target = "groupCategory")
     Group groupPostDtoToGroup(GroupPostDto groupPostDto);
 
     @Mapping(source = "groupName",target = "groupName")
@@ -25,6 +24,8 @@ public interface GroupMapper {
 
     @Mapping(source = "groupId", target = "groupId")
     @Mapping(source = "groupName", target = "groupName")
+    @Mapping(source = "maxSize", target = "maxSize")
+    @Mapping(source = "currentSize", target = "currentSize")
     @Mapping(source = "score", target = "score")
     MyGroupListDto groupToMyGroupListDto(Group group);
 }

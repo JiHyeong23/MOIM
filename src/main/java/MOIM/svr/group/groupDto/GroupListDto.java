@@ -1,6 +1,5 @@
 package MOIM.svr.group.groupDto;
 
-import MOIM.svr.group.GroupCategory;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,5 +11,5 @@ public class GroupListDto {
     private int maxSize;
     private int currentSize;
     private String groupImage;
-    private GroupCategory groupCategory;
+    private String groupCategory;
 }

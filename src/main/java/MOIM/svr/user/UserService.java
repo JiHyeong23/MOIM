@@ -93,9 +93,17 @@ public class UserService implements UserDetailsService {
         return groups.map(userGroup -> {
             Group group = userGroup.getGroup();
             MyGroupListDto myGroupListDto = groupMapper.groupToMyGroupListDto(group);
-            myGroupListDto.setPost(postRepository.findFirstByGroupOrderByCreatedAtDesc(group).getTitle());
-            myGroupListDto.setFirstMeetTime(
-                    scheduleRepository.findFirstByGroupIdOrderByStartDateDesc(group.getGroupId()).getScheduleName());
+            try {
+                myGroupListDto.setPost(postRepository.findFirstByGroupOrderByCreatedAtDesc(group).getTitle());
+            } catch (Exception e) {
+                myGroupListDto.setPost("-");
+            }
+            try {
+                myGroupListDto.setFirstMeetTime(
+                        scheduleRepository.findFirstByGroupIdOrderByStartDateDesc(group.getGroupId()).getScheduleName());
+            } catch (Exception e) {
+                myGroupListDto.setFirstMeetTime("-");
+            }
             return myGroupListDto;
         });
 

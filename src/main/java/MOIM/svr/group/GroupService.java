@@ -26,7 +26,9 @@ public class GroupService {
     public Group createGroup(GroupPostDto groupPostDto, HttpServletRequest request) {
         User user = utilMethods.parseTokenForUser(request);
         Group group = groupMapper.groupPostDtoToGroup(groupPostDto);
+        group.setGroupCategory(groupPostDto.getGroupCategory());
         group.setCreatedAt(LocalDateTime.now());
+        group.setCurrentSize(1);
         groupRepository.save(group);
 
         MasterCreateDao masterCreateDAO = new MasterCreateDao();

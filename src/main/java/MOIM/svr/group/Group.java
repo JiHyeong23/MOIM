@@ -31,8 +31,7 @@ public class Group {
     private String intro;
     private String groupImage;
     private int score;
-    @Enumerated(EnumType.STRING)
-    private GroupCategory groupCategory;
+    private String groupCategory;
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<UserGroup> users = new ArrayList<>();
