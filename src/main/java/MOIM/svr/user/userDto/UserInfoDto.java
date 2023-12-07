@@ -11,6 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 public class UserInfoDto {
+    private Long userId;
     private String userNickname;
     private String email;
     private LocalDateTime dob;

@@ -67,6 +67,7 @@ public class UserService implements UserDetailsService {
         User user = utilMethods.parseTokenForUser(request);
         UserInfoDto userInfoDto = userMapper.userToUserInfoDto(user);
         Long userId = user.getUserId();
+        userInfoDto.setUserId(userId);
         List<MyPostListDto> posts = postRepository.findMyPostListDto(userId);
         userInfoDto.setPosts(posts);
         return userInfoDto;
