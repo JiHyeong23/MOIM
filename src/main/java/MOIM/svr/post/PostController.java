@@ -57,8 +57,8 @@ public class PostController {
 
     //게시글 상세 조회
     @GetMapping("/{postId}")
-    public ResponseEntity getPost(@PathVariable Long postId) {
-        PostDetailDto postDetail = postService.getPostDetail(postId);
+    public ResponseEntity getPost(@PathVariable Long postId, HttpServletRequest request) {
+        PostDetailDto postDetail = postService.getPostDetail(request, postId);
 
         ResponseDto response = ResponseDto.builder()
                 .result(Result.SUCCESS).httpStatus(HttpStatus.OK).memo("Post got successfully")

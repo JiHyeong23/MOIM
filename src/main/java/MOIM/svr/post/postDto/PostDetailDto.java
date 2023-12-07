@@ -13,6 +13,7 @@ public class PostDetailDto {
     private String title;
     private String body;
     private LocalDateTime createdAt;
+    private Long userId;
     private Long groupId;
     private Status status;
     private Category category;
