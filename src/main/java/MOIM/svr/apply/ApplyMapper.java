@@ -2,6 +2,7 @@ package MOIM.svr.apply;
 
 import MOIM.svr.apply.applyDto.ApplyDetailDto;
 import MOIM.svr.apply.applyDto.ApplyPostDto;
+import MOIM.svr.apply.applyDto.MyApplyListDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
@@ -24,4 +25,7 @@ public interface ApplyMapper {
     @Mapping(source = "createdAt", target = "createdAt")
     @Mapping(source = "handled", target = "handled")
     ApplyDetailDto applyToApplyDetailDto(Apply apply);
+
+    @Mapping(source = "reason", target = "reason")
+    MyApplyListDto applyToMyList(Apply apply);
 }

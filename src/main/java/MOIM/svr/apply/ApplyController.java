@@ -2,6 +2,7 @@ package MOIM.svr.apply;
 
 import MOIM.svr.apply.applyDto.ApplyDetailDto;
 import MOIM.svr.apply.applyDto.ApplyPostDto;
+import MOIM.svr.apply.applyDto.MyApplyListDto;
 import MOIM.svr.group.Group;
 import MOIM.svr.group.GroupRepository;
 import MOIM.svr.utils.ResponseDto;
@@ -32,6 +33,17 @@ public class ApplyController {
         ResponseDto response = ResponseDto.builder()
                 .result(Result.SUCCESS).httpStatus(HttpStatus.CREATED).memo("Apply created successfully")
                 .response(group.getGroupName()).build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    //유저별 가입 신청 조회
+    @GetMapping("/my")
+    public ResponseEntity getUsersApply(HttpServletRequest request, Pageable pageable) {
+        Page<MyApplyListDto> myApply = applyService.findMyApply(request, pageable);
+
+        ResponseDto response = ResponseDto.builder()
+                .result(Result.SUCCESS).httpStatus(HttpStatus.OK).memo("get my apply successfully")
+                .response(myApply).build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
