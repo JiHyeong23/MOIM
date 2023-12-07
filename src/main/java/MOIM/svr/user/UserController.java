@@ -1,5 +1,6 @@
 package MOIM.svr.user;
 
+import MOIM.svr.group.groupDto.MyGroupListDto;
 import MOIM.svr.user.userDto.UserDeleteDto;
 import MOIM.svr.user.userDto.UserInfoDto;
 import MOIM.svr.user.userDto.UserPatchDto;
@@ -7,6 +8,8 @@ import MOIM.svr.user.userDto.UserSignUpDto;
 import MOIM.svr.utils.ResponseDto;
 import MOIM.svr.utils.Result;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -50,6 +53,17 @@ public class UserController {
         ResponseDto response = ResponseDto.builder()
                 .result(Result.SUCCESS).httpStatus(HttpStatus.OK).memo("User information got successfully")
                 .response(userInfo).build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    //가입 그룹 조회
+    @GetMapping("/group")
+    public ResponseEntity getUsersGroup(HttpServletRequest request, Pageable pageable) {
+        Page<MyGroupListDto> myGroup = userService.findMyGroup(request, pageable);
+
+        ResponseDto response = ResponseDto.builder()
+                .result(Result.SUCCESS).httpStatus(HttpStatus.OK).memo("My groups got successfully")
+                .response(myGroup).build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

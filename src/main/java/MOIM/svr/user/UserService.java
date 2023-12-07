@@ -1,14 +1,22 @@
 package MOIM.svr.user;
 
+import MOIM.svr.UserGroup.UserGroup;
+import MOIM.svr.UserGroup.UserGroupRepository;
+import MOIM.svr.group.Group;
+import MOIM.svr.group.GroupMapper;
+import MOIM.svr.group.GroupRepository;
+import MOIM.svr.group.groupDto.MyGroupListDto;
 import MOIM.svr.post.Post;
 import MOIM.svr.post.PostRepository;
 import MOIM.svr.post.postDto.MyPostListDto;
+import MOIM.svr.schedule.ScheduleRepository;
 import MOIM.svr.user.userDto.UserDeleteDto;
 import MOIM.svr.user.userDto.UserInfoDto;
 import MOIM.svr.user.userDto.UserPatchDto;
 import MOIM.svr.user.userDto.UserSignUpDto;
 import MOIM.svr.utils.UtilMethods;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,6 +38,10 @@ public class UserService implements UserDetailsService {
     private BCryptPasswordEncoder encoder;
     private UtilMethods utilMethods;
     private final PostRepository postRepository;
+    private final GroupRepository groupRepository;
+    private final GroupMapper groupMapper;
+    private final ScheduleRepository scheduleRepository;
+    private final UserGroupRepository userGroupRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -72,6 +84,21 @@ public class UserService implements UserDetailsService {
 
         userRepository.save(user);
         return user;
+    }
+
+    public Page<MyGroupListDto> findMyGroup(HttpServletRequest request, Pageable pageable) {
+        User user = utilMethods.parseTokenForUser(request);
+        Page<UserGroup> groups = userGroupRepository.findByUser(user, pageable);
+
+        return groups.map(userGroup -> {
+            Group group = userGroup.getGroup();
+            MyGroupListDto myGroupListDto = groupMapper.groupToMyGroupListDto(group);
+            myGroupListDto.setPost(postRepository.findFirstByGroupOrderByCreatedAtDesc(group).getTitle());
+            myGroupListDto.setFirstMeetTime(
+                    scheduleRepository.findFirstByGroupIdOrderByStartDateDesc(group.getGroupId()).getScheduleName());
+            return myGroupListDto;
+        });
+
     }
 
     public void removeUser(UserDeleteDto userDeleteDto, HttpServletRequest request) {

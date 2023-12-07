@@ -2,6 +2,7 @@ package MOIM.svr.group;
 
 import MOIM.svr.group.groupDto.GroupListDto;
 import MOIM.svr.group.groupDto.GroupPostDto;
+import MOIM.svr.group.groupDto.MyGroupListDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
@@ -21,4 +22,9 @@ public interface GroupMapper {
     @Mapping(source = "groupImage", target = "groupImage")
     @Mapping(source = "groupCategory", target = "groupCategory")
     GroupListDto groupToGroupListDto(Group group);
+
+    @Mapping(source = "groupId", target = "groupId")
+    @Mapping(source = "groupName", target = "groupName")
+    @Mapping(source = "score", target = "score")
+    MyGroupListDto groupToMyGroupListDto(Group group);
 }
