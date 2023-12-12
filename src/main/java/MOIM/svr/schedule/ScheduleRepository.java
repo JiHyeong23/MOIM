@@ -15,7 +15,7 @@ import java.time.Month;
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
 
     @Query("SELECT s FROM Schedule s WHERE s.groupId = :groupId " +
-            "AND s.startDate BETWEEN :start AND :end AND s.endDate BETWEEN :start AND :end")
+            "AND s.startDate < :end OR s.endDate > :start ORDER BY s.startDate")
     Page<Schedule> findByGroupId(Long groupId, LocalDateTime start, LocalDateTime end, Pageable pageable);
 
     Schedule findFirstByGroupIdOrderByStartDateDesc(Long groupId);

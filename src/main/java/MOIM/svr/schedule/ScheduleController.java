@@ -30,10 +30,10 @@ public class ScheduleController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    //스케줄 목록 조회
+    //월별 스케줄 조회
     @GetMapping("/list/{date}")
-    public ResponseEntity getSchedules(@PathVariable Long groupId, @PathVariable String date, Pageable pageable) {
-        Page<ScheduleDetailDto> schedules = scheduleService.getSchedules(groupId, date, pageable);
+    public ResponseEntity getDaySchedules(@PathVariable Long groupId, @PathVariable String date, Pageable pageable) {
+        Page<ScheduleDetailDto> schedules = scheduleService.getMonthSchedules(groupId, date, pageable);
 
         ResponseDto response = ResponseDto.builder()
                 .result(Result.SUCCESS).httpStatus(HttpStatus.OK).memo("Schedules got successfully")

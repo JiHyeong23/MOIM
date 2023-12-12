@@ -96,7 +96,7 @@ public class MasterController {
         masterService.deleteSchedule(groupId, scheduleId, request);
 
         ResponseDto response = ResponseDto.builder()
-                .result(Result.SUCCESS).httpStatus(HttpStatus.NO_CONTENT)
+                .result(Result.SUCCESS).httpStatus(HttpStatus.NO_CONTENT).memo("Schedule deleted successfully")
                 .response(scheduleId).build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

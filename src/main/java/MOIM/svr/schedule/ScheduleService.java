@@ -29,7 +29,7 @@ public class ScheduleService {
         return scheduleMapper.scheduleToScheduleDetailDto(schedule);
     }
 
-    public Page<ScheduleDetailDto> getSchedules(Long groupId, String date, Pageable pageable) {
+    public Page<ScheduleDetailDto> getMonthSchedules(Long groupId, String date, Pageable pageable) {
         LocalDate requestMonth = LocalDate.parse(date);
         int year = requestMonth.getYear();
         int month = requestMonth.getMonthValue();
