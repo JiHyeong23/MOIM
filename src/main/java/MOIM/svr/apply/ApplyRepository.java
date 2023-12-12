@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ApplyRepository extends JpaRepository<Apply, Long> {
-    Page<Apply> findByGroup(Group group, Pageable pageable);
+    Page<Apply> findByHandledFalseAndGroup(Group group, Pageable pageable);
     Page<Apply> findByUser(User user, Pageable pageable);
 }

@@ -53,11 +53,9 @@ public class MasterService {
     }
 
     public Page<ApplyDetailDto> getApplies(Long groupId, Pageable pageable, HttpServletRequest request) {
-        System.out.println(certifyMaster(groupId, request) != null);
         if (certifyMaster(groupId, request) != null) {
-            System.out.println("==================================");
             Group group = utilMethods.findGroup(groupId);
-            Page<Apply> applies = applyRepository.findByGroup(group, pageable);
+            Page<Apply> applies = applyRepository.findByHandledFalseAndGroup(group, pageable);
             return applies.map(applyMapper::applyToApplyDetailDto);
         }
         else {
@@ -88,7 +86,7 @@ public class MasterService {
                 groupRepository.save(group);
             }
         }
-        return apply; //인원 full 시 자동거절 추가구현 필요
+        return apply;
     }
 
     public Apply rejectMember(Long groupId, Long applyId, HttpServletRequest request) {

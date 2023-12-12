@@ -11,4 +11,5 @@ import org.springframework.stereotype.Repository;
 public interface UserGroupRepository extends JpaRepository<UserGroup, Long> {
     Page<UserGroup> findByUser(User user, Pageable pageable);
 
+    UserGroup findByUserAndGroup(User user, Group group);
 }
