@@ -54,7 +54,7 @@ public class ScheduleService {
         if (now.isBefore(startDate)) {
             return ScheduleStatus.PREVIOUS;
         }
-        if (now.isAfter(startDate) && now.isBefore(endDate)) {
+        else if (now.isAfter(startDate) && now.isBefore(endDate)) {
             return ScheduleStatus.INPROGRESS;
         }
         else {
