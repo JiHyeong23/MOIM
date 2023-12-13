@@ -19,7 +19,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static MOIM.svr.utils.PageResponseDto.*;
-import static MOIM.svr.utils.PageResponseDto.builder;
 
 @Component
 @AllArgsConstructor
@@ -65,8 +64,8 @@ public class UtilMethods {
                 .pageNo(pageNo).pageSize(10).totalElements(pageResponse.getTotalElements())
                 .totalPages(pageResponse.getTotalPages()).last(pageResponse.isLast()).build();
 
-        PageResponseDto response = builder()
-                .result(Result.SUCCESS).httpStatus(HttpStatus.OK).memo("get my apply successfully")
+        PageResponseDto response = PageResponseDto.builder()
+                .result(Result.SUCCESS).httpStatus(HttpStatus.OK).memo("memo")
                 .response(content).pageInfo(pageInfo).build();
         return response;
     }
