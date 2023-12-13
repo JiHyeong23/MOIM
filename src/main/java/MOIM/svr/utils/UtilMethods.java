@@ -65,7 +65,7 @@ public class UtilMethods {
                 .totalPages(pageResponse.getTotalPages()).last(pageResponse.isLast()).build();
 
         PageResponseDto response = PageResponseDto.builder()
-                .result(Result.SUCCESS).httpStatus(HttpStatus.OK).memo("memo")
+                .result(Result.SUCCESS).httpStatus(HttpStatus.OK).memo(memo)
                 .response(content).pageInfo(pageInfo).build();
         return response;
     }
