@@ -1,7 +1,5 @@
 package MOIM.svr.group;
 
-import MOIM.svr.master.Master;
-import MOIM.svr.user.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

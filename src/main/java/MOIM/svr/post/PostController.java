@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-import static MOIM.svr.utils.PageResponseDto.*;
-
 @RestController
 @RequestMapping("/posts")
 @AllArgsConstructor
@@ -79,7 +77,9 @@ public class PostController {
 
     //카테고리별 조회
     @GetMapping("/ctg/{groupId}/{category}")
-    public ResponseEntity getAllPosts(@PathVariable String category, @PathVariable Long groupId, Pageable pageable) {
+    public ResponseEntity getAllPosts(@PathVariable String category, @PathVariable Long groupId,
+                                      @RequestParam(value = "pageNo") int pageNo) {
+        Pageable pageable = PageRequest.of(pageNo, 10);
         Category postCategory;
         try {
             postCategory = Category.valueOf(category.toUpperCase());
@@ -87,10 +87,10 @@ public class PostController {
             return ResponseEntity.badRequest().body("Invalid category value");
         }
         Page<PostListDto> posts = postService.getCategoryPosts(postCategory, groupId, pageable);
+        List<PostListDto> content = posts.getContent();
 
-        ResponseDto response = ResponseDto.builder()
-                .result(Result.SUCCESS).httpStatus(HttpStatus.OK).memo("Category posts got successfully")
-                .response(posts).build();
+        PageResponseDto response = utilMethods.makeSuccessPageResponseDto(
+                content, "Category posts got successfully", pageNo, posts);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

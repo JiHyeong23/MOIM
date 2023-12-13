@@ -2,7 +2,6 @@ package MOIM.svr.UserGroup;
 
 import MOIM.svr.group.Group;
 import MOIM.svr.user.User;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

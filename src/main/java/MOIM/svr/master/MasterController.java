@@ -9,7 +9,6 @@ import MOIM.svr.schedule.ScheduleDto.SchedulePatchDto;
 import MOIM.svr.schedule.ScheduleDto.SchedulePostDto;
 import MOIM.svr.utils.PageResponseDto;
 import MOIM.svr.utils.ResponseDto;
-import MOIM.svr.utils.Result;
 import MOIM.svr.utils.UtilMethods;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,8 +20,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-
-import static MOIM.svr.utils.PageResponseDto.*;
 
 @RestController
 @RequestMapping("/master/{groupId}")

@@ -4,7 +4,6 @@ import MOIM.svr.group.groupDto.GroupListDto;
 import MOIM.svr.group.groupDto.GroupPostDto;
 import MOIM.svr.master.MasterCreateDao;
 import MOIM.svr.master.MasterService;
-import MOIM.svr.post.Post;
 import MOIM.svr.user.User;
 import MOIM.svr.utils.UtilMethods;
 import lombok.AllArgsConstructor;

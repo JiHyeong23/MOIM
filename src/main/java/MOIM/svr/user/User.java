@@ -2,12 +2,9 @@ package MOIM.svr.user;
 
 import MOIM.svr.UserGroup.UserGroup;
 import MOIM.svr.comment.Comment;
-import MOIM.svr.group.Group;
 import MOIM.svr.master.Master;
 import MOIM.svr.post.Post;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDate;

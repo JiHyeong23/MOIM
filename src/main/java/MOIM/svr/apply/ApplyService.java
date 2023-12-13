@@ -2,7 +2,6 @@ package MOIM.svr.apply;
 
 import MOIM.svr.apply.applyDto.ApplyPostDto;
 import MOIM.svr.apply.applyDto.MyApplyListDto;
-import MOIM.svr.group.GroupRepository;
 import MOIM.svr.user.User;
 import MOIM.svr.utils.UtilMethods;
 import lombok.AllArgsConstructor;

@@ -6,7 +6,6 @@ import MOIM.svr.master.Master;
 import MOIM.svr.post.Post;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

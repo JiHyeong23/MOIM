@@ -1,6 +1,5 @@
 package MOIM.svr.user.userDto;
 
-import MOIM.svr.post.Post;
 import MOIM.svr.post.postDto.MyPostListDto;
 import lombok.Getter;
 import lombok.Setter;

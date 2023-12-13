@@ -1,12 +1,10 @@
 package MOIM.svr.schedule;
 
-import MOIM.svr.post.enums.Status;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.time.Month;
 
 @Entity
 @Getter

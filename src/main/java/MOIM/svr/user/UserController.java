@@ -5,17 +5,20 @@ import MOIM.svr.user.userDto.UserDeleteDto;
 import MOIM.svr.user.userDto.UserInfoDto;
 import MOIM.svr.user.userDto.UserPatchDto;
 import MOIM.svr.user.userDto.UserSignUpDto;
+import MOIM.svr.utils.PageResponseDto;
 import MOIM.svr.utils.ResponseDto;
 import MOIM.svr.utils.Result;
 import MOIM.svr.utils.UtilMethods;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -57,12 +60,13 @@ public class UserController {
 
     //가입 그룹 조회
     @GetMapping("/group")
-    public ResponseEntity getUsersGroup(HttpServletRequest request, Pageable pageable) {
+    public ResponseEntity getUsersGroup(@RequestParam(value = "pageNo") int pageNo, HttpServletRequest request) {
+        Pageable pageable = PageRequest.of(pageNo, 10);
         Page<MyGroupListDto> myGroup = userService.findMyGroup(request, pageable);
+        List<MyGroupListDto> content = myGroup.getContent();
 
-        ResponseDto response = ResponseDto.builder()
-                .result(Result.SUCCESS).httpStatus(HttpStatus.OK).memo("My groups got successfully")
-                .response(myGroup).build();
+        PageResponseDto response = utilMethods.makeSuccessPageResponseDto(
+                content, "My groups got successfully", pageNo, myGroup);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -71,9 +75,8 @@ public class UserController {
     public ResponseEntity deleteUser(@RequestBody UserDeleteDto userDeleteDto, HttpServletRequest request) {
         userService.removeUser(userDeleteDto, request);
 
-        ResponseDto response = ResponseDto.builder()
-                .result(Result.SUCCESS).httpStatus(HttpStatus.NO_CONTENT).memo("User deleted successfully")
-                .response("No content").build();
+        ResponseDto response = utilMethods.makeSuccessResponseDto(
+                "No content", HttpStatus.NO_CONTENT, "User deleted successfully");
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

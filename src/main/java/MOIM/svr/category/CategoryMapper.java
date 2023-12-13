@@ -1,6 +1,5 @@
 package MOIM.svr.category;
 
-import MOIM.svr.post.Post;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;

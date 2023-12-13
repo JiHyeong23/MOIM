@@ -1,7 +1,6 @@
 package MOIM.svr.comment;
 
 import MOIM.svr.comment.commentDto.CommentMyResponseDto;
-import MOIM.svr.comment.commentDto.CommentResponseDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;

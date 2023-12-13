@@ -5,7 +5,6 @@ import MOIM.svr.group.Group;
 import MOIM.svr.utils.Category;
 import MOIM.svr.post.enums.Status;
 import MOIM.svr.user.User;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

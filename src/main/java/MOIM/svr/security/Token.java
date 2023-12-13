@@ -1,6 +1,5 @@
 package MOIM.svr.security;
 
-import lombok.Builder;
 import lombok.Setter;
 
 @Setter
