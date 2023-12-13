@@ -7,6 +7,7 @@ import MOIM.svr.user.userDto.UserPatchDto;
 import MOIM.svr.user.userDto.UserSignUpDto;
 import MOIM.svr.utils.ResponseDto;
 import MOIM.svr.utils.Result;
+import MOIM.svr.utils.UtilMethods;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,15 +23,15 @@ import javax.servlet.http.HttpServletRequest;
 public class UserController {
 
     private UserService userService;
+    private UtilMethods utilMethods;
 
     //회원가입
     @PostMapping("/signup")
     public ResponseEntity createUser(@RequestBody UserSignUpDto userSignUpDto) {
         User user = userService.registerUser(userSignUpDto);
 
-        ResponseDto response = ResponseDto.builder()
-                .result(Result.SUCCESS).httpStatus(HttpStatus.CREATED).memo("User created successfully")
-                .response(user.getEmail()).build();
+        ResponseDto response = utilMethods.makeSuccessResponseDto(
+                user.getEmail(), "User created successfully");
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -39,9 +40,8 @@ public class UserController {
     public ResponseEntity patchUserInfo(@RequestBody UserPatchDto userPatchDto, HttpServletRequest request) {
         User user = userService.modifiedUserInfo(userPatchDto, request);
 
-        ResponseDto response = ResponseDto.builder()
-                .result(Result.SUCCESS).httpStatus(HttpStatus.OK).memo("User patched successfully")
-                .response(user.getUserNickname()).build();
+        ResponseDto response = utilMethods.makeSuccessResponseDto(
+                user.getUserNickname(), "User patched successfully");
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -50,9 +50,8 @@ public class UserController {
     public ResponseEntity getUser(HttpServletRequest request) {
         UserInfoDto userInfo = userService.getUserInfo(request);
 
-        ResponseDto response = ResponseDto.builder()
-                .result(Result.SUCCESS).httpStatus(HttpStatus.OK).memo("User information got successfully")
-                .response(userInfo).build();
+        ResponseDto response = utilMethods.makeSuccessResponseDto(
+                userInfo, "User information got successfully");
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

@@ -7,31 +7,39 @@ import MOIM.svr.group.groupDto.GroupPatchDto;
 import MOIM.svr.schedule.Schedule;
 import MOIM.svr.schedule.ScheduleDto.SchedulePatchDto;
 import MOIM.svr.schedule.ScheduleDto.SchedulePostDto;
+import MOIM.svr.utils.PageResponseDto;
 import MOIM.svr.utils.ResponseDto;
 import MOIM.svr.utils.Result;
+import MOIM.svr.utils.UtilMethods;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+
+import static MOIM.svr.utils.PageResponseDto.*;
 
 @RestController
 @RequestMapping("/master/{groupId}")
 @AllArgsConstructor
 public class MasterController {
     private MasterService masterService;
+    private UtilMethods utilMethods;
 
     //그룹별 가입 신청 목록 조회
     @GetMapping("/apply")
-    public ResponseEntity getApplies(@PathVariable Long groupId, Pageable pageable, HttpServletRequest request) {
+    public ResponseEntity getApplies(@PathVariable Long groupId, @RequestParam(value = "pageNo") int pageNo, HttpServletRequest request) {
+        Pageable pageable = PageRequest.of(pageNo, 10);
         Page<ApplyDetailDto> page = masterService.getApplies(groupId, pageable, request);
+        List<ApplyDetailDto> content = page.getContent();
 
-        ResponseDto response = ResponseDto.builder()
-                .result(Result.SUCCESS).httpStatus(HttpStatus.OK).memo("Applies got successfully")
-                .response(page).build();
+        PageResponseDto response = utilMethods.makeSuccessPageResponseDto(
+                content, "Applies got successfully", pageNo, page);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -40,9 +48,8 @@ public class MasterController {
     public ResponseEntity getApply(@PathVariable Long groupId, @PathVariable Long applyId, HttpServletRequest request) {
         ApplyDetailDto applyDetail = masterService.getApplyDetail(groupId, applyId, request);
 
-        ResponseDto response = ResponseDto.builder()
-                .result(Result.SUCCESS).httpStatus(HttpStatus.OK).memo("Apply got successfully")
-                .response(applyDetail).build();
+        ResponseDto response = utilMethods.makeSuccessResponseDto(
+                applyDetail, "Apply got successfully");
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -51,9 +58,8 @@ public class MasterController {
     public ResponseEntity getMember(@PathVariable Long groupId, @PathVariable Long applyId, HttpServletRequest request) {
         Apply apply = masterService.acceptMember(groupId, applyId, request);
 
-        ResponseDto response = ResponseDto.builder()
-                .result(Result.SUCCESS).httpStatus(HttpStatus.OK).memo("Accept created successfully")
-                .response(apply.getHandled().toString()).build();
+        ResponseDto response = utilMethods.makeSuccessResponseDto(
+                apply.getHandled().toString(), HttpStatus.CREATED, "Accept created successfully");
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -62,9 +68,8 @@ public class MasterController {
     public ResponseEntity rejectMember(@PathVariable Long groupId, @PathVariable Long applyId, HttpServletRequest request) {
         Apply apply = masterService.rejectMember(groupId, applyId, request);
 
-        ResponseDto response = ResponseDto.builder()
-                .result(Result.SUCCESS).httpStatus(HttpStatus.NO_CONTENT).memo("Apply deleted successfully")
-                .response(apply.getHandled().toString()).build();
+        ResponseDto response = utilMethods.makeSuccessResponseDto(
+                apply.getHandled(), HttpStatus.NO_CONTENT, "Apply deleted successfully");
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -73,9 +78,8 @@ public class MasterController {
     public ResponseEntity postSchedule(@PathVariable Long groupId, @RequestBody SchedulePostDto schedulePostDto, HttpServletRequest request) {
         Schedule schedule = masterService.createSchedule(groupId, schedulePostDto, request);
 
-        ResponseDto response = ResponseDto.builder()
-                .result(Result.SUCCESS).httpStatus(HttpStatus.CREATED).memo("Schedule created successfully")
-                .response(schedule.getScheduleName()).build();
+        ResponseDto response = utilMethods.makeSuccessResponseDto(
+                schedule.getScheduleName(), HttpStatus.CREATED, "Schedule created successfully");
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -84,9 +88,8 @@ public class MasterController {
     public ResponseEntity patchSchedule(@PathVariable Long groupId, @RequestBody SchedulePatchDto schedulePatchDto, HttpServletRequest request) {
         Schedule schedule = masterService.modifySchedule(groupId, schedulePatchDto, request);
 
-        ResponseDto response = ResponseDto.builder()
-                .result(Result.SUCCESS).httpStatus(HttpStatus.OK).memo("Schedule modified successfully")
-                .response(schedule.getScheduleName()).build();
+        ResponseDto response = utilMethods.makeSuccessResponseDto(
+                schedule.getScheduleName(), "Schedule modified successfully");
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -95,9 +98,8 @@ public class MasterController {
     public ResponseEntity deleteSchedule(@PathVariable Long groupId, @PathVariable Long scheduleId, HttpServletRequest request) {
         masterService.deleteSchedule(groupId, scheduleId, request);
 
-        ResponseDto response = ResponseDto.builder()
-                .result(Result.SUCCESS).httpStatus(HttpStatus.NO_CONTENT).memo("Schedule deleted successfully")
-                .response(scheduleId).build();
+        ResponseDto response = utilMethods.makeSuccessResponseDto(
+                scheduleId, HttpStatus.NO_CONTENT, "Schedule deleted successfully");
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -106,9 +108,8 @@ public class MasterController {
     public ResponseEntity postSetNotice(@PathVariable Long groupId, @PathVariable Long postId, HttpServletRequest request) {
         masterService.postSetNotice(groupId, postId, request);
 
-        ResponseDto response = ResponseDto.builder()
-                .result(Result.SUCCESS).httpStatus(HttpStatus.OK).memo("Post set notice successfully")
-                .response(postId).build();
+        ResponseDto response = utilMethods.makeSuccessResponseDto(
+                postId, "Post set notice successfully");
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -117,9 +118,8 @@ public class MasterController {
     public ResponseEntity patchGroup(@PathVariable Long groupId, @RequestBody GroupPatchDto groupPatchDto, HttpServletRequest request) {
         Group group = masterService.modifyGroupInfo(groupId, groupPatchDto, request);
 
-        ResponseDto response = ResponseDto.builder()
-                .result(Result.SUCCESS).httpStatus(HttpStatus.OK).memo("Group info modified successfully")
-                .response(group.getGroupName()).build();
+        ResponseDto response = utilMethods.makeSuccessResponseDto(
+                group.getGroupName(), "Group info modified successfully");
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -128,9 +128,8 @@ public class MasterController {
     public ResponseEntity patchNumber(@PathVariable Long groupId, @PathVariable Long modifyNumber, HttpServletRequest request) {
         Group group = masterService.modifyGroupNumber(groupId, modifyNumber, request);
 
-        ResponseDto response = ResponseDto.builder()
-                .result(Result.SUCCESS).httpStatus(HttpStatus.OK).memo("Group number modified successfully")
-                .response(group.getMaxSize()).build();
+        ResponseDto response = utilMethods.makeSuccessResponseDto(
+                group.getMaxSize(), "Group number modified successfully");
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -139,9 +138,8 @@ public class MasterController {
     public ResponseEntity deleteGroup(@PathVariable Long groupId, HttpServletRequest request) {
         masterService.deleteGroup(groupId, request);
 
-        ResponseDto response = ResponseDto.builder()
-                .result(Result.SUCCESS).httpStatus(HttpStatus.NO_CONTENT).memo("Group deleted successfully")
-                .response(groupId).build();
+        ResponseDto response = utilMethods.makeSuccessResponseDto(
+                groupId, HttpStatus.NO_CONTENT, "Group deleted successfully");
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

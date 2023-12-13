@@ -3,6 +3,7 @@ package MOIM.svr.schedule;
 import MOIM.svr.schedule.ScheduleDto.ScheduleDetailDto;
 import MOIM.svr.utils.ResponseDto;
 import MOIM.svr.utils.Result;
+import MOIM.svr.utils.UtilMethods;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,15 +19,15 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class ScheduleController {
     private ScheduleService scheduleService;
+    private UtilMethods utilMethods;
 
     //스케줄 조회
     @GetMapping("/{scheduleId}")
     public ResponseEntity getSchedule(@PathVariable Long groupId, @PathVariable Long scheduleId) {
         ScheduleDetailDto schedule = scheduleService.getScheduleDetail(scheduleId);
 
-        ResponseDto response = ResponseDto.builder()
-                .result(Result.SUCCESS).httpStatus(HttpStatus.OK).memo("Schedule got successfully")
-                .response(schedule).build();
+        ResponseDto response = utilMethods.makeSuccessResponseDto(
+                schedule, "Schedule got successfully");
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

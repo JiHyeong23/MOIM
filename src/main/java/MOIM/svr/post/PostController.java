@@ -1,35 +1,37 @@
 package MOIM.svr.post;
 
 import MOIM.svr.post.postDto.PostPatchDto;
-import MOIM.svr.utils.Category;
+import MOIM.svr.utils.*;
 import MOIM.svr.post.postDto.PostCreationDto;
 import MOIM.svr.post.postDto.PostDetailDto;
 import MOIM.svr.post.postDto.PostListDto;
-import MOIM.svr.utils.ResponseDto;
-import MOIM.svr.utils.Result;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+
+import static MOIM.svr.utils.PageResponseDto.*;
 
 @RestController
 @RequestMapping("/posts")
 @AllArgsConstructor
 public class PostController {
     private PostService postService;
+    private UtilMethods utilMethods;
 
     //게시글 작성
     @PostMapping
     public ResponseEntity createPost(@RequestBody PostCreationDto postCreationDto, HttpServletRequest request) {
         Post post = postService.savePost(postCreationDto, request);
 
-        ResponseDto response = ResponseDto.builder()
-                .result(Result.SUCCESS).httpStatus(HttpStatus.CREATED).memo("Post created successfully")
-                .response(post.getPostId()).build();
+        ResponseDto response = utilMethods.makeSuccessResponseDto(
+                post.getPostId(), HttpStatus.CREATED, "Post created successfully");
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -38,9 +40,8 @@ public class PostController {
     public ResponseEntity patchPost(@RequestBody PostPatchDto postPatchDto, HttpServletRequest request) {
         Post post = postService.patchPost(postPatchDto, request);
 
-        ResponseDto response = ResponseDto.builder()
-                .result(Result.SUCCESS).httpStatus(HttpStatus.OK).memo("Post patched successfully")
-                .response(post.getTitle()).build();
+        ResponseDto response = utilMethods.makeSuccessResponseDto(
+                post.getPostId(), "Post patched successfully");
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -49,9 +50,8 @@ public class PostController {
     public ResponseEntity deletePost(@PathVariable Long postId, HttpServletRequest request) {
         postService.deletePost(postId, request);
 
-        ResponseDto response = ResponseDto.builder()
-                .result(Result.SUCCESS).httpStatus(HttpStatus.NO_CONTENT).memo("Post deleted successfully")
-                .response(postId).build();
+        ResponseDto response = utilMethods.makeSuccessResponseDto(
+                postId, HttpStatus.NO_CONTENT, "Post deleted successfully");
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -60,20 +60,20 @@ public class PostController {
     public ResponseEntity getPost(@PathVariable Long postId, HttpServletRequest request) {
         PostDetailDto postDetail = postService.getPostDetail(request, postId);
 
-        ResponseDto response = ResponseDto.builder()
-                .result(Result.SUCCESS).httpStatus(HttpStatus.OK).memo("Post got successfully")
-                .response(postDetail).build();
+        ResponseDto response = utilMethods.makeSuccessResponseDto(
+                postDetail, "Post got successfully");
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     //내가쓴글 조회
     @GetMapping("/my")
-    public ResponseEntity getPostList(HttpServletRequest request, Pageable pageable) {
+    public ResponseEntity getPostList(@RequestParam(value = "pageNo") int pageNo, HttpServletRequest request) {
+        Pageable pageable = PageRequest.of(pageNo, 10);
         Page<PostListDto> posts = postService.getUserPosts(request, pageable);
+        List<PostListDto> content = posts.getContent();
 
-        ResponseDto response = ResponseDto.builder()
-                .result(Result.SUCCESS).httpStatus(HttpStatus.OK).memo("My Posts got successfully")
-                .response(posts).build();
+        PageResponseDto response = utilMethods.makeSuccessPageResponseDto(
+                content, "My Posts got successfully", pageNo, posts);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

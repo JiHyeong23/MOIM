@@ -10,12 +10,16 @@ import MOIM.svr.security.JwtHelper;
 import MOIM.svr.user.User;
 import MOIM.svr.user.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+
+import static MOIM.svr.utils.PageResponseDto.*;
+import static MOIM.svr.utils.PageResponseDto.builder;
 
 @Component
 @AllArgsConstructor
@@ -47,5 +51,51 @@ public class UtilMethods {
 
     public Group findGroup(Long groupId) {
         return groupRepository.findById(groupId).get();
+    }
+
+//    public <T> PageResponseDto.PageInfo makePageInfo(int pageNo, Page<T> response) {
+//        PageResponseDto.PageInfo pageInfo = PageResponseDto.PageInfo.builder()
+//                .pageNo(pageNo).pageSize(10).totalElements(response.getTotalElements())
+//                .totalPages(response.getTotalPages()).last(response.isLast()).build();
+//        return pageInfo;
+//    }
+
+    public <T, U> PageResponseDto makeSuccessPageResponseDto(T content, String memo, int pageNo, Page<U> pageResponse) {
+        PageInfo pageInfo = PageInfo.builder()
+                .pageNo(pageNo).pageSize(10).totalElements(pageResponse.getTotalElements())
+                .totalPages(pageResponse.getTotalPages()).last(pageResponse.isLast()).build();
+
+        PageResponseDto response = builder()
+                .result(Result.SUCCESS).httpStatus(HttpStatus.OK).memo("get my apply successfully")
+                .response(content).pageInfo(pageInfo).build();
+        return response;
+    }
+
+    public <T> ResponseDto makeSuccessResponseDto(T content, String memo) {
+        ResponseDto response = ResponseDto.builder()
+                .result(Result.SUCCESS).httpStatus(HttpStatus.OK).memo(memo)
+                .response(content).build();
+        return response;
+    }
+
+    public <T> ResponseDto makeSuccessResponseDto(T content, HttpStatus status, String memo) {
+        ResponseDto response = ResponseDto.builder()
+                .result(Result.SUCCESS).httpStatus(HttpStatus.OK).memo(memo)
+                .response(content).build();
+        return response;
+    }
+
+    public <T> ResponseDto makeFailResponseDto(T content, String memo) {
+        ResponseDto response = ResponseDto.builder()
+                .result(Result.FAIL).httpStatus(HttpStatus.IM_USED).memo(memo)
+                .response(content).build();
+        return response;
+    }
+
+    public <T> ResponseDto makeResponseDto(Result result, HttpStatus status, T content, String memo) {
+        ResponseDto response = ResponseDto.builder()
+                .result(result).httpStatus(status).memo(memo)
+                .response(content).build();
+        return response;
     }
 }

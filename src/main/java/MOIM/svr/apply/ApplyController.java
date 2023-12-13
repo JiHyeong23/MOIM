@@ -1,22 +1,27 @@
 package MOIM.svr.apply;
 
 import MOIM.svr.UserGroup.UserGroupRepository;
-import MOIM.svr.apply.applyDto.ApplyDetailDto;
 import MOIM.svr.apply.applyDto.ApplyPostDto;
 import MOIM.svr.apply.applyDto.MyApplyListDto;
 import MOIM.svr.group.Group;
 import MOIM.svr.group.GroupRepository;
+import MOIM.svr.utils.PageResponseDto;
 import MOIM.svr.utils.ResponseDto;
 import MOIM.svr.utils.Result;
+import MOIM.svr.utils.UtilMethods;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
+import java.util.List;
+
+import static MOIM.svr.utils.PageResponseDto.*;
+
 
 @RestController
 @RequestMapping("/applies")
@@ -25,6 +30,7 @@ public class ApplyController {
     private ApplyService applyService;
     private GroupRepository groupRepository;
     private final UserGroupRepository userGroupRepository;
+    private UtilMethods utilMethods;
 
     //가입 신청
     @PostMapping
@@ -34,18 +40,15 @@ public class ApplyController {
 
         ResponseDto response;
         if (group.getCurrentSize() == group.getMaxSize()) {
-            response = ResponseDto.builder()
-                    .result(Result.FAIL).httpStatus(HttpStatus.IM_USED).memo("Group is full")
-                    .response(group.getGroupName()).build();
+            response = utilMethods.makeFailResponseDto(
+                    group.getGroupName(), "Group is full");
         } else {
             if (userGroupRepository.findByUserAndGroup(apply.getUser(), group) == null) {
-                response = ResponseDto.builder()
-                        .result(Result.SUCCESS).httpStatus(HttpStatus.CREATED).memo("Apply created successfully")
-                        .response(group.getGroupName()).build();
+                response = utilMethods.makeSuccessResponseDto(
+                        group.getGroupName(), HttpStatus.CREATED, "Apply created successfully");
             } else {
-                response = ResponseDto.builder()
-                        .result(Result.FAIL).httpStatus(HttpStatus.IM_USED).memo("Already joined group")
-                        .response(group.getGroupName()).build();
+                response = utilMethods.makeFailResponseDto(
+                        group.getGroupName(), "Already joined group");
             }
         }
         return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -53,13 +56,13 @@ public class ApplyController {
 
     //유저별 가입 신청 조회
     @GetMapping("/my")
-    public ResponseEntity getUsersApply(HttpServletRequest request, Pageable pageable) {
+    public ResponseEntity getUsersApply(@RequestParam(value = "pageNo") int pageNo, HttpServletRequest request) {
+        Pageable pageable = PageRequest.of(pageNo, 10);
         Page<MyApplyListDto> myApply = applyService.findMyApply(request, pageable);
+        List<MyApplyListDto> content = myApply.getContent();
 
-        ResponseDto response = ResponseDto.builder()
-                .result(Result.SUCCESS).httpStatus(HttpStatus.OK).memo("get my apply successfully")
-                .response(myApply).build();
+        PageResponseDto response = utilMethods.makeSuccessPageResponseDto(
+                content, "get my apply successfully", pageNo, myApply);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
-
 }
