@@ -1,13 +1,12 @@
 package MOIM.svr.user;
 
-import MOIM.svr.UserGroup.UserGroup;
+import MOIM.svr.userGroup.UserGroup;
 import MOIM.svr.comment.Comment;
 import MOIM.svr.master.Master;
 import MOIM.svr.post.Post;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +20,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
+    //@Column(unique = true)
     private String userNickname;
     private String email;
     private String pw;

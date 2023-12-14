@@ -20,6 +20,8 @@ public interface GroupMapper {
     @Mapping(source = "currentSize", target = "currentSize")
     @Mapping(source = "groupImage", target = "groupImage")
     @Mapping(source = "groupCategory", target = "groupCategory")
+    @Mapping(source = "intro", target = "intro")
+    @Mapping(source = "score", target = "score")
     GroupListDto groupToGroupListDto(Group group);
 
     @Mapping(source = "groupId", target = "groupId")

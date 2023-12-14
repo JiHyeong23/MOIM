@@ -1,4 +1,4 @@
-package MOIM.svr.UserGroup;
+package MOIM.svr.userGroup;
 
 import MOIM.svr.group.Group;
 import MOIM.svr.group.GroupRepository;

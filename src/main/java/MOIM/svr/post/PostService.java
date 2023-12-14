@@ -1,6 +1,8 @@
 package MOIM.svr.post;
 
 import MOIM.svr.comment.commentDto.CommentResponseDto;
+import MOIM.svr.exception.CustomException;
+import MOIM.svr.exception.ErrorCode;
 import MOIM.svr.group.Group;
 import MOIM.svr.group.GroupRepository;
 import MOIM.svr.post.postDto.PostPatchDto;
@@ -55,7 +57,7 @@ public class PostService {
             return post;
         }
         else {
-            return null;
+            throw new CustomException(ErrorCode.NOT_YOURS);
         }
     }
 
@@ -64,7 +66,12 @@ public class PostService {
         User user = utilMethods.parseTokenForUser(request);
         if(user == post.getUser()) {
             postRepository.deleteById(postId);
+        } else {
+            throw new CustomException(ErrorCode.NOT_YOURS);
         }
+        Group group = groupRepository.findById(post.getGroup().getGroupId()).get();
+        group.setScore(group.getScore()-1);
+        groupRepository.save(group);
     }
 
     public PostDetailDto getPostDetail(HttpServletRequest request, Long postId) {

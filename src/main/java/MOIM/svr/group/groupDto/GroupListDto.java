@@ -12,4 +12,6 @@ public class GroupListDto {
     private int currentSize;
     private String groupImage;
     private String groupCategory;
+    private String intro;
+    private int score;
 }

@@ -1,5 +1,8 @@
 package MOIM.svr.group;
 
+import MOIM.svr.exception.CustomException;
+import MOIM.svr.exception.ErrorCode;
+import MOIM.svr.exception.ValidException;
 import MOIM.svr.group.groupDto.GroupListDto;
 import MOIM.svr.group.groupDto.GroupPostDto;
 import MOIM.svr.utils.PageResponseDto;
@@ -11,9 +14,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -25,7 +31,13 @@ public class GroupController {
 
     //그룹 생성
     @PostMapping
-    public ResponseEntity postGroup(@RequestBody GroupPostDto groupPostDto, HttpServletRequest request) {
+    public ResponseEntity postGroup(@RequestBody @Valid GroupPostDto groupPostDto, Errors errors, HttpServletRequest request) {
+        if (errors.hasErrors()) {
+            for (FieldError error : errors.getFieldErrors()) {
+                throw new ValidException(HttpStatus.NOT_FOUND, error.getDefaultMessage());
+            }
+            throw new CustomException(ErrorCode.NOT_VALID);
+        }
         Group group = groupService.createGroup(groupPostDto, request);
 
         ResponseDto response = utilMethods.makeSuccessResponseDto(

@@ -1,5 +1,8 @@
 package MOIM.svr.user;
 
+import MOIM.svr.exception.CustomException;
+import MOIM.svr.exception.ErrorCode;
+import MOIM.svr.exception.ValidException;
 import MOIM.svr.group.groupDto.MyGroupListDto;
 import MOIM.svr.user.userDto.UserDeleteDto;
 import MOIM.svr.user.userDto.UserInfoDto;
@@ -15,10 +18,16 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
@@ -30,7 +39,13 @@ public class UserController {
 
     //회원가입
     @PostMapping("/signup")
-    public ResponseEntity createUser(@RequestBody UserSignUpDto userSignUpDto) {
+    public ResponseEntity createUser(@RequestBody @Valid UserSignUpDto userSignUpDto, Errors errors) {
+        if (errors.hasErrors()) {
+            for (FieldError error : errors.getFieldErrors()) {
+                throw new ValidException(HttpStatus.NOT_FOUND, error.getDefaultMessage());
+            }
+            throw new CustomException(ErrorCode.NOT_VALID);
+        }
         User user = userService.registerUser(userSignUpDto);
 
         ResponseDto response = utilMethods.makeSuccessResponseDto(

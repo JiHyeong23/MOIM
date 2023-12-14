@@ -1,10 +1,13 @@
 package MOIM.svr.group;
 
+import MOIM.svr.exception.CustomException;
+import MOIM.svr.exception.ErrorCode;
 import MOIM.svr.group.groupDto.GroupListDto;
 import MOIM.svr.group.groupDto.GroupPostDto;
 import MOIM.svr.master.MasterCreateDao;
 import MOIM.svr.master.MasterService;
 import MOIM.svr.user.User;
+import MOIM.svr.userGroup.UserGroupService;
 import MOIM.svr.utils.UtilMethods;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,29 +24,35 @@ public class GroupService {
     private GroupMapper groupMapper;
     private UtilMethods utilMethods;
     private MasterService masterService;
+    private UserGroupService userGroupService;
 
     public Group createGroup(GroupPostDto groupPostDto, HttpServletRequest request) {
         User user = utilMethods.parseTokenForUser(request);
-        Group group = groupMapper.groupPostDtoToGroup(groupPostDto);
-        group.setGroupCategory(groupPostDto.getGroupCategory());
-        group.setCreatedAt(LocalDateTime.now());
-        group.setCurrentSize(1);
-        groupRepository.save(group);
+        Group group;
+        if(groupRepository.findByGroupName(groupPostDto.getGroupName()) != null) {
+            throw new CustomException(ErrorCode.NAME_CONFLICT);
+        } else {
+            group = groupMapper.groupPostDtoToGroup(groupPostDto);
+            group.setGroupCategory(groupPostDto.getGroupCategory());
+            group.setCreatedAt(LocalDateTime.now());
+            group.setCurrentSize(1);
+            groupRepository.save(group);
 
-        MasterCreateDao masterCreateDAO = new MasterCreateDao();
-        masterCreateDAO.setGroupId(group.getGroupId());
-        masterCreateDAO.setUserId(user.getUserId());
-        group.setMaster(masterService.createMaster(masterCreateDAO));
-        groupRepository.save(group);
+            userGroupService.createUserGroup(group.getGroupId(), user.getUserId());
+
+            MasterCreateDao masterCreateDAO = new MasterCreateDao();
+            masterCreateDAO.setGroupId(group.getGroupId());
+            masterCreateDAO.setUserId(user.getUserId());
+            group.setMaster(masterService.createMaster(masterCreateDAO));
+            groupRepository.save(group);
+        }
         return group;
     }
 
     public Page<GroupListDto> getGroups(Pageable pageable) {
         Page<Group> groups = groupRepository.findAllByGroupIdNotOrderByCreatedAtDesc(1L, pageable);
 
-        return groups.map(group -> {
-            return groupMapper.groupToGroupListDto(group);
-        });
+        return groups.map(groupMapper::groupToGroupListDto);
     }
-
 }
+

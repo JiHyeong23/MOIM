@@ -79,7 +79,7 @@ public class UtilMethods {
 
     public <T> ResponseDto makeSuccessResponseDto(T content, HttpStatus status, String memo) {
         ResponseDto response = ResponseDto.builder()
-                .result(Result.SUCCESS).httpStatus(HttpStatus.OK).memo(memo)
+                .result(Result.SUCCESS).httpStatus(status).memo(memo)
                 .response(content).build();
         return response;
     }

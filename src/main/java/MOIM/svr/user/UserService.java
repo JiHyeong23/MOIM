@@ -1,7 +1,9 @@
 package MOIM.svr.user;
 
-import MOIM.svr.UserGroup.UserGroup;
-import MOIM.svr.UserGroup.UserGroupRepository;
+import MOIM.svr.exception.CustomException;
+import MOIM.svr.exception.ErrorCode;
+import MOIM.svr.userGroup.UserGroup;
+import MOIM.svr.userGroup.UserGroupRepository;
 import MOIM.svr.group.Group;
 import MOIM.svr.group.GroupMapper;
 import MOIM.svr.group.GroupRepository;
@@ -55,9 +57,14 @@ public class UserService implements UserDetailsService {
     }
 
     public User registerUser(UserSignUpDto userSignUpDto) {
-        User user = userMapper.userSignUpToUser(userSignUpDto);
-        user.setPw(encoder.encode(user.getPw()));
-        userRepository.save(user);
+        User user;
+        if (userRepository.findByUserNickname(userSignUpDto.getUserNickname()) != null) {
+            throw new CustomException(ErrorCode.NAME_CONFLICT);
+        } else {
+            user = userMapper.userSignUpToUser(userSignUpDto);
+            user.setPw(encoder.encode(user.getPw()));
+            userRepository.save(user);
+        }
         return user;
     }
 
@@ -80,7 +87,11 @@ public class UserService implements UserDetailsService {
         }
         String nickname = userPatchDto.getNickname();
         if(nickname != null) {
-            user.updateNickname(nickname);
+            if (userRepository.findByUserNickname(userPatchDto.getNickname()) != null) {
+                throw new CustomException(ErrorCode.NAME_CONFLICT);
+            } else {
+                user.updateNickname(nickname);
+            }
         }
         String userImage = userPatchDto.getUserImage();
         if(userImage != null) {
@@ -111,12 +122,15 @@ public class UserService implements UserDetailsService {
             }
             return myGroupListDto;
         });
-
     }
 
     public void removeUser(UserDeleteDto userDeleteDto, HttpServletRequest request) {
         User user = utilMethods.parseTokenForUser(request);
-        userRepository.delete(user);
+        if (encoder.matches(userDeleteDto.getPw(),user.getPw())) {
+            userRepository.delete(user);
+        } else {
+            throw new CustomException(ErrorCode.NOT_MATCH);
+        }
     }
 
     public User findByEmail(String username) {

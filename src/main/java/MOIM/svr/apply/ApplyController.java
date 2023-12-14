@@ -1,6 +1,6 @@
 package MOIM.svr.apply;
 
-import MOIM.svr.UserGroup.UserGroupRepository;
+import MOIM.svr.userGroup.UserGroupRepository;
 import MOIM.svr.apply.applyDto.ApplyPostDto;
 import MOIM.svr.apply.applyDto.MyApplyListDto;
 import MOIM.svr.group.Group;

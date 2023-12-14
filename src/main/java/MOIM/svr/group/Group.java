@@ -1,6 +1,6 @@
 package MOIM.svr.group;
 
-import MOIM.svr.UserGroup.UserGroup;
+import MOIM.svr.userGroup.UserGroup;
 import MOIM.svr.apply.Apply;
 import MOIM.svr.master.Master;
 import MOIM.svr.post.Post;
@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
