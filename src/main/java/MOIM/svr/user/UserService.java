@@ -2,6 +2,8 @@ package MOIM.svr.user;
 
 import MOIM.svr.exception.CustomException;
 import MOIM.svr.exception.ErrorCode;
+import MOIM.svr.mail.EmailController;
+import MOIM.svr.user.userDto.*;
 import MOIM.svr.userGroup.UserGroup;
 import MOIM.svr.userGroup.UserGroupRepository;
 import MOIM.svr.group.Group;
@@ -11,10 +13,6 @@ import MOIM.svr.group.groupDto.MyGroupListDto;
 import MOIM.svr.post.PostRepository;
 import MOIM.svr.post.postDto.MyPostListDto;
 import MOIM.svr.schedule.ScheduleRepository;
-import MOIM.svr.user.userDto.UserDeleteDto;
-import MOIM.svr.user.userDto.UserInfoDto;
-import MOIM.svr.user.userDto.UserPatchDto;
-import MOIM.svr.user.userDto.UserSignUpDto;
 import MOIM.svr.utils.UtilMethods;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -40,7 +38,6 @@ public class UserService implements UserDetailsService {
     private BCryptPasswordEncoder encoder;
     private UtilMethods utilMethods;
     private final PostRepository postRepository;
-    private final GroupRepository groupRepository;
     private final GroupMapper groupMapper;
     private final ScheduleRepository scheduleRepository;
     private final UserGroupRepository userGroupRepository;
@@ -102,6 +99,15 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
+    public void removeUser(UserDeleteDto userDeleteDto, HttpServletRequest request) {
+        User user = utilMethods.parseTokenForUser(request);
+        if (encoder.matches(userDeleteDto.getPw(),user.getPw())) {
+            userRepository.delete(user);
+        } else {
+            throw new CustomException(ErrorCode.NOT_MATCH);
+        }
+    }
+
     public Page<MyGroupListDto> findMyGroup(HttpServletRequest request, Pageable pageable) {
         User user = utilMethods.parseTokenForUser(request);
         Page<UserGroup> groups = userGroupRepository.findByUser(user, pageable);
@@ -124,17 +130,23 @@ public class UserService implements UserDetailsService {
         });
     }
 
-    public void removeUser(UserDeleteDto userDeleteDto, HttpServletRequest request) {
-        User user = utilMethods.parseTokenForUser(request);
-        if (encoder.matches(userDeleteDto.getPw(),user.getPw())) {
-            userRepository.delete(user);
-        } else {
-            throw new CustomException(ErrorCode.NOT_MATCH);
-        }
-    }
-
     public User findByEmail(String username) {
         return userRepository.findByEmail(username);
     }
 
+    public void setTmpPassword(String email, String tmpPw) {
+        User user = userRepository.findByEmail(email);
+        user.setPw(encoder.encode(tmpPw));
+        userRepository.save(user);
+    }
+
+    public User modifyPassword(UserPwDto userPwDto, HttpServletRequest request) {
+        User user = utilMethods.parseTokenForUser(request);
+        if (encoder.matches(userPwDto.getBeforePw(), user.getPw())) {
+            user.setPw(encoder.encode(userPwDto.getSetPw()));
+        } else {
+            throw new CustomException(ErrorCode.NOT_MATCH);
+        }
+        return user;
+    }
 }

@@ -7,6 +7,8 @@ import MOIM.svr.group.groupDto.GroupPostDto;
 import MOIM.svr.master.MasterCreateDao;
 import MOIM.svr.master.MasterService;
 import MOIM.svr.user.User;
+import MOIM.svr.userGroup.UserGroup;
+import MOIM.svr.userGroup.UserGroupRepository;
 import MOIM.svr.userGroup.UserGroupService;
 import MOIM.svr.utils.UtilMethods;
 import lombok.AllArgsConstructor;
@@ -16,6 +18,8 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -25,6 +29,7 @@ public class GroupService {
     private UtilMethods utilMethods;
     private MasterService masterService;
     private UserGroupService userGroupService;
+    private final UserGroupRepository userGroupRepository;
 
     public Group createGroup(GroupPostDto groupPostDto, HttpServletRequest request) {
         User user = utilMethods.parseTokenForUser(request);
@@ -53,6 +58,17 @@ public class GroupService {
         Page<Group> groups = groupRepository.findAllByGroupIdNotOrderByCreatedAtDesc(1L, pageable);
 
         return groups.map(groupMapper::groupToGroupListDto);
+    }
+
+    public int synchronizeSize(Long moimId) {
+        Group group = groupRepository.findById(moimId).get();
+        List<UserGroup> userList = userGroupRepository.findAllByGroup(group);
+        if (group.getCurrentSize() !=  userList.size()) {
+            group.setCurrentSize(userList.size());
+            groupRepository.save(group);
+            return userList.size();
+        }
+        return 0;
     }
 }
 

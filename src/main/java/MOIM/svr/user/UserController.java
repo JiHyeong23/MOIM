@@ -4,13 +4,9 @@ import MOIM.svr.exception.CustomException;
 import MOIM.svr.exception.ErrorCode;
 import MOIM.svr.exception.ValidException;
 import MOIM.svr.group.groupDto.MyGroupListDto;
-import MOIM.svr.user.userDto.UserDeleteDto;
-import MOIM.svr.user.userDto.UserInfoDto;
-import MOIM.svr.user.userDto.UserPatchDto;
-import MOIM.svr.user.userDto.UserSignUpDto;
+import MOIM.svr.user.userDto.*;
 import MOIM.svr.utils.PageResponseDto;
 import MOIM.svr.utils.ResponseDto;
-import MOIM.svr.utils.Result;
 import MOIM.svr.utils.UtilMethods;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,16 +14,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
@@ -82,6 +75,16 @@ public class UserController {
 
         PageResponseDto response = utilMethods.makeSuccessPageResponseDto(
                 content, "My groups got successfully", pageNo, myGroup);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    //비밀번호 변경
+    @PostMapping("/pw")
+    public ResponseEntity modifyUserPw(@RequestBody UserPwDto userPwDto, HttpServletRequest request) {
+        User user = userService.modifyPassword(userPwDto, request);
+
+        ResponseDto response = utilMethods.makeSuccessResponseDto(
+                user.getUserId(), HttpStatus.OK, "Password modified successfully");
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

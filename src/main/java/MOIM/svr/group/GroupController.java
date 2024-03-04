@@ -9,6 +9,7 @@ import MOIM.svr.utils.PageResponseDto;
 import MOIM.svr.utils.ResponseDto;
 import MOIM.svr.utils.UtilMethods;
 import lombok.AllArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -34,7 +35,7 @@ public class GroupController {
     public ResponseEntity postGroup(@RequestBody @Valid GroupPostDto groupPostDto, Errors errors, HttpServletRequest request) {
         if (errors.hasErrors()) {
             for (FieldError error : errors.getFieldErrors()) {
-                throw new ValidException(HttpStatus.NOT_FOUND, error.getDefaultMessage());
+                throw new ValidException(HttpStatus.CONFLICT, error.getDefaultMessage());
             }
             throw new CustomException(ErrorCode.NOT_VALID);
         }
@@ -55,6 +56,20 @@ public class GroupController {
         PageResponseDto response = utilMethods.makeSuccessPageResponseDto(
                 content, "Groups got successfully", pageNo, groups);
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PostMapping("/{moimId}")
+    public ResponseEntity syncGroupSize(@PathVariable Long moimId) {
+        int size = groupService.synchronizeSize(moimId);
+        ResponseDto responseDto;
+        if (size == 0) {
+            responseDto = utilMethods.makeFailResponseDto(moimId, "already updated");
+        } else {
+            responseDto = utilMethods.makeSuccessResponseDto(
+                    size, "Successfully updated"
+            );
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
 }
