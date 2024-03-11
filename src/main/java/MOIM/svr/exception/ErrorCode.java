@@ -14,7 +14,7 @@ public enum ErrorCode {
     ,HAVE_MORE(HttpStatus.NOT_FOUND, "현재인원이 설정인원보다 많습니다.")
     ,SAME_SIZE(HttpStatus.CONFLICT, "현재인원과 동일합니다.")
     ,HAVE_USER(HttpStatus.NOT_FOUND, "멤버가 있어 삭제 불가능합니다.")
-    ,NOT_MATCH(HttpStatus.NOT_FOUND, "비밀번호가 틀립니다.")
+    ,NOT_MATCH(HttpStatus.NO_CONTENT, "비밀번호가 틀립니다.")
     ,NOT_VALID(HttpStatus.NOT_FOUND, "유효하지 않은 값이 포함되어 있습니다.")
     ;
 
