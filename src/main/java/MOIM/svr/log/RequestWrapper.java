@@ -10,10 +10,10 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class RequsetWrapper extends HttpServletRequestWrapper {
+public class RequestWrapper extends HttpServletRequestWrapper {
 
     private byte[] cachedInputStream;
-    public RequsetWrapper(HttpServletRequest request) throws IOException {
+    public RequestWrapper(HttpServletRequest request) throws IOException {
         super(request);
         InputStream requestInputStream = request.getInputStream();
         this.cachedInputStream = StreamUtils.copyToByteArray(requestInputStream);
